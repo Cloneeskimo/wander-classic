@@ -9,6 +9,6 @@
 *.db
 *.vcxproj
 *.vcxproj.filters
-*.vcxproj.users
+*.vcxproj.user
 *.filters
-*.users
+*.user
