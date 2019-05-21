@@ -17,7 +17,7 @@
 #include <managers/AttackManager.h>
 
 //Build Number
-const static int BUILD_NUMBER = 488;
+const static int BUILD_NUMBER = 490;
 
 //GameEngine Class
 class GameEngine {

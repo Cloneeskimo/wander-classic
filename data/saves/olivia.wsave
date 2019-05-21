@@ -1,10 +1,11 @@
 SAVE: save
 {
 	STORY NAME: Main Story
-	MAP FILE: deepforest1.wmap
+	MAP FILE: deepforest2.wmap
 	PAST EVENTS: past events
 	{
-		1: 1
+		3: 3
+		2: 2
 	}
 	PLAYERS: players
 	{
@@ -12,16 +13,16 @@ SAVE: save
 		{
 			NAME: Olivia
 			SPEED: 1
-			X: 11
-			Y: 7
+			X: 26
+			Y: 9
 			SYMBOL: O
-			LEVEL: 1
+			LEVEL: 7
 			GOLD: 0
-			HEALTH: 7
+			HEALTH: 67
 			ATTRIBUTE POINTS: 0
-			ENDURANCE: 0
-			SPIRIT: 0
-			CAPABILITY: 0
+			ENDURANCE: 10
+			SPIRIT: 1
+			CAPABILITY: 1
 			EXP: 1
 			INVENTORY: inventory
 			{
@@ -31,7 +32,7 @@ SAVE: save
 					SUBTYPE: NOSUBTYPE
 					NAME: Spider Leg
 					VALUE: 1
-					QUANTITY: 1
+					QUANTITY: 3
 					LEVEL: 1
 					EFFECT: -1
 				}
@@ -41,20 +42,7 @@ SAVE: save
 					SUBTYPE: DAGGER
 					NAME: Broken Wooden Dagger
 					VALUE: 3
-					QUANTITY: 1
-					LEVEL: 1
-					EFFECT: 3
-				}
-			}
-			EQUIPMENT: equipment
-			{
-				ITEM: item
-				{
-					TYPE: ARMOR
-					SUBTYPE: CHESTPIECE
-					NAME: Bloodied White Shirt
-					VALUE: 1
-					QUANTITY: 1
+					QUANTITY: 2
 					LEVEL: 1
 					EFFECT: 3
 				}
@@ -68,13 +56,246 @@ SAVE: save
 					LEVEL: 1
 					EFFECT: 4
 				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: CHESTPIECE
+					NAME: Bloodied White Shirt
+					VALUE: 1
+					QUANTITY: 2
+					LEVEL: 1
+					EFFECT: 3
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: WAND
+					NAME: Webwood Wand
+					VALUE: 3
+					QUANTITY: 1
+					LEVEL: 1
+					EFFECT: 5
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Rat Tail
+					VALUE: 1
+					QUANTITY: 3
+					LEVEL: 2
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: STAFF
+					NAME: Kobold Staff
+					VALUE: 6
+					QUANTITY: 2
+					LEVEL: 3
+					EFFECT: 5
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: BOW
+					NAME: Webwood Bow
+					VALUE: 6
+					QUANTITY: 1
+					LEVEL: 3
+					EFFECT: 3
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: HAMMER
+					NAME: Kobold Hammer
+					VALUE: 6
+					QUANTITY: 1
+					LEVEL: 3
+					EFFECT: 6
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Rat Tail
+					VALUE: 2
+					QUANTITY: 4
+					LEVEL: 4
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Kobold Candle
+					VALUE: 2
+					QUANTITY: 2
+					LEVEL: 4
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: HAMMER
+					NAME: Webwood Hammer
+					VALUE: 6
+					QUANTITY: 1
+					LEVEL: 3
+					EFFECT: 8
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Kobold Candle
+					VALUE: 1
+					QUANTITY: 1
+					LEVEL: 3
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: BOW
+					NAME: Kobold Bow
+					VALUE: 6
+					QUANTITY: 1
+					LEVEL: 3
+					EFFECT: 4
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Spider Leg
+					VALUE: 2
+					QUANTITY: 1
+					LEVEL: 5
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: BRACERS
+					NAME: Spider Cloth Bracers
+					VALUE: 1
+					QUANTITY: 1
+					LEVEL: 2
+					EFFECT: 2
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Kobold Candle
+					VALUE: 3
+					QUANTITY: 4
+					LEVEL: 6
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: SWORD
+					NAME: Superior Sword of the Kobold Chief
+					VALUE: 14
+					QUANTITY: 1
+					LEVEL: 4
+					EFFECT: 13
+				}
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Spider Leg
+					VALUE: 3
+					QUANTITY: 2
+					LEVEL: 6
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: SWORD
+					NAME: Kobold Sword
+					VALUE: 24
+					QUANTITY: 1
+					LEVEL: 6
+					EFFECT: 14
+				}
+			}
+			EQUIPMENT: equipment
+			{
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: HELMET
+					NAME: Spider Cloth Helmet
+					VALUE: 1
+					QUANTITY: 1
+					LEVEL: 2
+					EFFECT: 2
+				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: LEGGINGS
+					NAME: Superior Leggings of the Kobold Chief
+					VALUE: 4
+					QUANTITY: 1
+					LEVEL: 4
+					EFFECT: 15
+				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: BRACERS
+					NAME: Spider Cloth Bracers
+					VALUE: 6
+					QUANTITY: 1
+					LEVEL: 5
+					EFFECT: 13
+				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: BELT
+					NAME: Kobold Belt
+					VALUE: 8
+					QUANTITY: 1
+					LEVEL: 6
+					EFFECT: 10
+				}
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: CHESTPIECE
+					NAME: Superior Chestpiece of the Kobold Chief
+					VALUE: 13
+					QUANTITY: 1
+					LEVEL: 7
+					EFFECT: 49
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: STAFF
+					NAME: Superior Staff of the Kobold Chief
+					VALUE: 39
+					QUANTITY: 1
+					LEVEL: 7
+					EFFECT: 27
+				}
 			}
 			WEAPON LEVELS: weapon levels
 			{
 				WEAPON LEVEL: weapon level
 				{
 					WEAPON: SWORD
-					LEVEL: 1
+					LEVEL: 11
 				}
 				WEAPON LEVEL: weapon level
 				{
@@ -84,12 +305,12 @@ SAVE: save
 				WEAPON LEVEL: weapon level
 				{
 					WEAPON: DAGGER
-					LEVEL: 2
+					LEVEL: 10
 				}
 				WEAPON LEVEL: weapon level
 				{
 					WEAPON: STAFF
-					LEVEL: 1
+					LEVEL: 2
 				}
 				WEAPON LEVEL: weapon level
 				{
@@ -99,7 +320,7 @@ SAVE: save
 				WEAPON LEVEL: weapon level
 				{
 					WEAPON: HAMMER
-					LEVEL: 1
+					LEVEL: 7
 				}
 			}
 		}
@@ -112,13 +333,13 @@ SAVE: save
 			{
 				NAME: Forest Spider
 				SYMBOL: F
-				HEALTH: 12
-				MAX HEALTH: 12
-				DAMAGE: 1
+				HEALTH: 54
+				MAX HEALTH: 54
+				DAMAGE: 9
 				SPEED: 1
-				LEVEL: 1
-				X: 23
-				Y: 7
+				LEVEL: 7
+				X: 6
+				Y: 6
 				AGRO DISTANCE: 5
 				DROPS: drops
 				{
@@ -130,9 +351,9 @@ SAVE: save
 							TYPE: JUNK
 							SUBTYPE: NOSUBTYPE
 							NAME: Spider Leg
-							VALUE: 1
+							VALUE: 3
 							QUANTITY: 1
-							LEVEL: 1
+							LEVEL: 7
 							EFFECT: -1
 						}
 					}
@@ -142,12 +363,12 @@ SAVE: save
 						ITEM: item
 						{
 							TYPE: WEAPON
-							SUBTYPE: BOW
-							NAME: Webwood Bow
-							VALUE: 3
+							SUBTYPE: SWORD
+							NAME: Webwood Sword
+							VALUE: 33
 							QUANTITY: 1
-							LEVEL: 1
-							EFFECT: 2
+							LEVEL: 7
+							EFFECT: 18
 						}
 					}
 					DROP: drop
@@ -156,17 +377,17 @@ SAVE: save
 						ITEM: item
 						{
 							TYPE: ARMOR
-							SUBTYPE: NECKLACE
-							NAME: Spider Cloth Necklace
-							VALUE: 1
+							SUBTYPE: BELT
+							NAME: Spider Cloth Belt
+							VALUE: 11
 							QUANTITY: 1
-							LEVEL: 1
-							EFFECT: 1
+							LEVEL: 7
+							EFFECT: 7
 						}
 					}
 				}
 			}
-			MAP: Deep Forest I
+			MAP: Deep Forest II
 		}
 		ENEMY INFO: enemy info
 		{
@@ -174,13 +395,13 @@ SAVE: save
 			{
 				NAME: Forest Spider
 				SYMBOL: F
-				HEALTH: 12
-				MAX HEALTH: 12
-				DAMAGE: 1
+				HEALTH: 57
+				MAX HEALTH: 57
+				DAMAGE: 7
 				SPEED: 1
-				LEVEL: 1
-				X: 16
-				Y: 11
+				LEVEL: 7
+				X: 22
+				Y: 8
 				AGRO DISTANCE: 5
 				DROPS: drops
 				{
@@ -192,9 +413,9 @@ SAVE: save
 							TYPE: JUNK
 							SUBTYPE: NOSUBTYPE
 							NAME: Spider Leg
-							VALUE: 1
+							VALUE: 3
 							QUANTITY: 1
-							LEVEL: 1
+							LEVEL: 7
 							EFFECT: -1
 						}
 					}
@@ -206,10 +427,10 @@ SAVE: save
 							TYPE: WEAPON
 							SUBTYPE: WAND
 							NAME: Webwood Wand
-							VALUE: 3
+							VALUE: 33
 							QUANTITY: 1
-							LEVEL: 1
-							EFFECT: 5
+							LEVEL: 7
+							EFFECT: 27
 						}
 					}
 					DROP: drop
@@ -218,17 +439,153 @@ SAVE: save
 						ITEM: item
 						{
 							TYPE: ARMOR
-							SUBTYPE: BELT
-							NAME: Spider Cloth Belt
-							VALUE: 1
+							SUBTYPE: NECKLACE
+							NAME: Spider Cloth Necklace
+							VALUE: 11
 							QUANTITY: 1
-							LEVEL: 1
-							EFFECT: 1
+							LEVEL: 7
+							EFFECT: 11
 						}
 					}
 				}
 			}
-			MAP: Deep Forest I
+			MAP: Deep Forest II
+		}
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Rat
+				SYMBOL: R
+				HEALTH: 32
+				MAX HEALTH: 32
+				DAMAGE: 4
+				SPEED: 1
+				LEVEL: 7
+				X: 15
+				Y: 3
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Rat Tail
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 7
+							EFFECT: -1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest II
+		}
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Rat
+				SYMBOL: R
+				HEALTH: 28
+				MAX HEALTH: 28
+				DAMAGE: 4
+				SPEED: 1
+				LEVEL: 7
+				X: 16
+				Y: 3
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Rat Tail
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 7
+							EFFECT: -1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest II
+		}
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Rat
+				SYMBOL: R
+				HEALTH: 27
+				MAX HEALTH: 27
+				DAMAGE: 4
+				SPEED: 1
+				LEVEL: 7
+				X: 7
+				Y: 10
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Rat Tail
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 7
+							EFFECT: -1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest II
+		}
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Rat
+				SYMBOL: R
+				HEALTH: 34
+				MAX HEALTH: 34
+				DAMAGE: 4
+				SPEED: 1
+				LEVEL: 7
+				X: 9
+				Y: 11
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Rat Tail
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 7
+							EFFECT: -1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest II
 		}
 	}
 }

@@ -163,7 +163,7 @@ int Player::getTotalArmor() {
 	return totalArmor;
 }
 int Player::getRegeneration() {
-	return (float)this->_level * ((float)((this->_spirit * 2) + 100) / 100);
+	return (float)this->_level * (this->getEffectiveSpirit());
 }
 float Player::getTotalDamage(bool withCapability, bool withProficiency) {
 	int dmg = 0;
@@ -171,7 +171,7 @@ float Player::getTotalDamage(bool withCapability, bool withProficiency) {
 		if (this->_equipment[i].getType() == ItemType::WEAPON) {
 			dmg = this->_equipment[i].getEffect();
 			if (withCapability) {
-				dmg *= ((float)(2 * this->_capability) + 100) / 100;
+				dmg *= this->getEffectiveCapability();
 			}
 			if (withProficiency) {
 				dmg *= this->getWeaponProficiency();
@@ -800,10 +800,10 @@ void Player::openAttributes() {
 		toDisplay.push_back(ColorString("+ Base Health (" + to_string(CalcManager::getBaseHealth(this->_level)) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("= Total HP: " + to_string(this->getMaxHealth()), ColorFlag::RED, true, 0, 100, true));
 		toDisplay.push_back(emptyLine);
-		toDisplay.push_back(ColorString("  Base Regeneration (" + to_string(this->getLevel()) + ") x Effective Spirit (" + to_string((float)((this->_spirit * 2) + 100) / 100) + ")", ColorFlag::GRAY, true, 0, 100, true));
+		toDisplay.push_back(ColorString("  Base Regeneration (" + to_string(this->getLevel()) + ") x Effective Spirit (" + to_string(this->getEffectiveSpirit()) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("= Total Regeneration: " + to_string((int)this->getRegeneration()), ColorFlag::CYAN, true, 0, 100, true));
 		toDisplay.push_back(emptyLine);
-		toDisplay.push_back(ColorString("  Effective Capability (" + to_string((float)this->getTotalDamage(true, false) - (float)this->getTotalDamage(false, false)) + ") + Weapon Damage (" + to_string(this->getWeapon()->getEffect()) + ") x Weapon Proficiency (" + to_string(this->getWeaponProficiency()) + ")", ColorFlag::GRAY, true, 0, 100, true));
+		toDisplay.push_back(ColorString("  Effective Capability (" + to_string(this->getEffectiveCapability()) + ") x Weapon Damage (" + to_string(this->getWeapon()->getEffect()) + ") x Weapon Proficiency (" + to_string(this->getWeaponProficiency()) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("= Total Damage: " + to_string((int)this->getTotalDamage()), ColorFlag::PURPLE, true, 0, 100, true));
 
 		//display

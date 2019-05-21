@@ -76,8 +76,12 @@ public:
 	bool getWeapon(Item* thisItem);
 	bool takeDamage(int thisMuch);
 	ColorString createHealthBar(int width);
+
+	//Effective Calculations
 	float getEffectiveArmor() { return (float)this->getTotalArmor() / 3; }
 	float getEffectiveEndurance() { return ((float)(this->_endurance * 2) + 100) / 100; }
+	float getEffectiveCapability() { return ((float)(this->_capability * 2) + 100) / 100; }
+	float getEffectiveSpirit() { return ((float)(this->_spirit * 4) + 100) / 100; }
 
 private:
 
@@ -101,3 +105,5 @@ private:
 };
 
 #endif
+
+//PLAYER DAMAGE CALCULATIONS:

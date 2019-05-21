@@ -238,6 +238,9 @@ SaveInfo SaveManager::loadSave(std::string saveName) {
 			else saveInfo.currentMap = Map(child.getValue(), saveInfo.storyInfo.name);
 		}
 
+		//past events
+		if (child == "past events") for (Node child_ : *(child.getChildren())) saveInfo.pastEvents.push_back(child_.getValueAsInt());
+
 		//players
 		if (child == "players") {
 			if (saveInfo.storyInfo.levels.size() < 1) OptionsManager::wError("save corrupted: players provided before story name", "SAVEMANAGER_H");
