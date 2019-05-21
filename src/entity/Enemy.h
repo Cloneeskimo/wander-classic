@@ -1,19 +1,24 @@
-#pragma once
+
+#ifndef Enemy_h
+#define Enemy_h
+
+//includes
 #include <vector>
 #include <string>
 #include <random>
-#include "calcManager.h"
-#include "entity.h"
-#include "item.h"
-#include "player.h"
+#include <managers/CalcManager.h>
+#include <entity/Entity.h>
+#include <Item.h>
+#include <entity/Player.h>
 
+//Random Enemy Info Struct
 //WHEN GENERATING RANDOM ENEMIES:
 //Leave default for random
 //Some (commented below) cannot be set to random, they MUST be given values
-struct EnemyRandomInfo
-{
-	EnemyRandomInfo(std::string name = "Unnamed Enemy", float eliteness = 1.0, std::vector<std::string> dropInfo = std::vector<std::string>(), int speed = 1, int level = -1, int damage = -1, int health = -1)
-	{
+struct EnemyRandomInfo {
+
+	//Constructor
+	EnemyRandomInfo(std::string name = "Unnamed Enemy", float eliteness = 1.0, std::vector<std::string> dropInfo = std::vector<std::string>(), int speed = 1, int level = -1, int damage = -1, int health = -1) {
 		this->name = name;
 		this->dropInfo = dropInfo;
 		this->speed = speed;
@@ -22,6 +27,8 @@ struct EnemyRandomInfo
 		this->health = health;
 		this->eliteness = eliteness;
 	}
+
+	//Data
 	std::string name = "Unnamed Enemy"; //NOT RANDOMIZED
 	std::vector<std::string> dropInfo; //NOT RANDOMIZED
 	int speed = 1; //NOT RANDOMIZED
@@ -32,33 +39,39 @@ struct EnemyRandomInfo
 	int agroDistance = -1;
 	float eliteness = 1.0;
 };
-struct Dot
-{
-	//Constructor
-	Dot() {};
-	Dot(int length, int dmg)
-	{
+
+//Dot Struct
+struct Dot {
+
+	//Constructors
+	Dot() {}; //default
+	Dot(int length, int dmg) { //full
 		this->length = length;
 		this->dmg = dmg;
 	}
-	
+
 	//Variables
 	int length;
 	int dmg;
 };
 
-class Enemy : public Entity
-{
+//Enemy Class
+class Enemy : public Entity {
 public:
-	//Constructor
+
+	//Constructors
 	using Entity::Entity;
 	void constructEnemyExtras(std::vector<Drop> drops, int maxHealth, int damage, int level, int agroDistance = 5);
 
-	//Functions
+	//Node Conversion Functions
+	Node convertToNode();
+	static Enemy createEnemyFromNode(Node* node);
+
+	//Other Functions
 	ColorString createHealthBar(int width);
 	bool takeDamage(int thisMuch);
 
-	//Getters
+	//Accessors
 	int getHealth() { return this->_health; }
 	int getMaxHealth() { return this->_maxHealth; }
 	int getDamage() { return this->_damage; }
@@ -69,7 +82,7 @@ public:
 	std::vector<Dot> getDots() { return this->_dots; }
 	std::vector<Drop> getDrops() { return this->_drops; }
 
-	//Setters
+	//Mutators
 	void setHealth(int newHealth) { this->_health = newHealth; }
 	void setAgro(bool toThis) { this->_agroed = toThis; }
 	void updateEffects();
@@ -77,9 +90,12 @@ public:
 	void addDot(Dot thisDot) { this->_dots.push_back(thisDot); }
 
 private:
-	//Variables
+
+	//Collection Data
 	std::vector<Drop> _drops;
 	std::vector<Dot> _dots;
+
+	//Other Data
 	bool _agroed = false;
 	int _isStunned = 0;
 	int _health, _maxHealth;
@@ -89,37 +105,30 @@ private:
 };
 
 //ELITENESS OF 2 -> DOUBLE HEALTH & DMG // ELITENESS OF 1/2 -> HALF HEALTH & DMG
-static Enemy createRandomEnemy(EnemyRandomInfo info, int playerLevel)
-{
-	//Set Enemy Level
-	if (info.level == -1) {
-		info.level = playerLevel;
-	}
+static Enemy createRandomEnemy(EnemyRandomInfo info, int playerLevel) {
 
-	//Set Enemy Health
-	if (info.health == -1) {
-		info.health = CalcManager::getEnemyHealth(info.level, info.eliteness);
-	}
+	//set enemy level
+	if (info.level == -1) info.level = playerLevel;
 
-	//Set Enemy Damage
+	//set enemy health
+	if (info.health == -1) info.health = CalcManager::getEnemyHealth(info.level, info.eliteness);
+
+	//set enemy damage
 	if (info.damage == -1) {
 		info.damage = CalcManager::getEnemyDamage(info.level, info.eliteness);
-		if (info.damage < 1) { info.damage = 1; }
+		if (info.damage < 1) info.damage = 1;
 	}
 
-	//Set Enemy Agro Distance
-	if (info.agroDistance == -1) {
-		info.agroDistance = 5;
-	}
+	//set enemy agro distance
+	if (info.agroDistance == -1) info.agroDistance = 5;
 
+	//create enemy drops
 	std::vector<Drop> enemyDrops = CalcManager::createDropsFromStrings(info.dropInfo, info.level, info.eliteness);
 
-	//Create Enemy
+	//create and return enemy
 	Enemy newEnemy = Enemy(EntityType::ENEMY, info.name, info.symbol, 0, 0, info.speed);
 	newEnemy.constructEnemyExtras(enemyDrops, info.health, info.damage, info.level);
 	return newEnemy;
 }
-static Enemy loadEnemyFrame(std::string file, std::string storyFolder)
-{
 
-}
+#endif

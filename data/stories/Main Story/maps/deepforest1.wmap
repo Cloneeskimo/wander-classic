@@ -31,6 +31,30 @@ gates:
 enemies:
 {
 	{
-		enemy frame: forest spider.wenemy
+		enemy name: Forest Spider
+		enemy symbol: 'F'
+		enemy speed: 1
+		enemy eliteness: 1.0
+		enemy agro distance: 4
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 50
+				item name: Spider Leg
+			}
+			{
+				item type: WEAPON
+				item chance: 20
+				item name: Webwood [type]
+				item fortune: 0.8
+			}
+			{
+				item type: ARMOR
+				item chance: 20
+				item name: Spider Cloth [type]
+				item fortune: 0.8
+			}
+		}
 	}
 }

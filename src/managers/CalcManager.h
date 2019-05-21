@@ -1,31 +1,36 @@
-#pragma once
+
+#ifndef CalcManager_h
+#define CalcManager_h
+
+//Includes
 #include <string>
 #include <vector>
 #include <fstream>
 #include <cstdlib> 
 #include <ctime> 
-#include "item.h"
-#include "clfram.h"
+#include <Item.h>
+#include <Clfram.h>
 
-struct EquipmentRandomInfo
-{
+//Random Equipment Info Struct
+struct RandomEquipmentInfo {
 	std::string name;
 	int level;
 	std::vector<std::string> positiveAdjs;
 	std::vector<std::string> negativeAdjs;
 };
 
-static class CalcManager
-{
+//CalcManager Class
+static class CalcManager {
 public:
-	//Variables
-	static std::vector<EquipmentRandomInfo> armorRandomInfo;
-	static std::vector<EquipmentRandomInfo> weaponRandomInfo;
+
+	//Data
+	static std::vector<RandomEquipmentInfo> armorRandomInfo;
+	static std::vector<RandomEquipmentInfo> weaponRandomInfo;
 
 	//Random Info Functions
 	static void loadRandomInfo(std::string storyName);
-	static EquipmentRandomInfo getArmorRandomInfo(int level);
-	static EquipmentRandomInfo getWeaponRandomInfo(int level);
+	static RandomEquipmentInfo getArmorRandomInfo(int level);
+	static RandomEquipmentInfo getWeaponRandomInfo(int level);
 
 	//Variable Calculations
 	static float getEffectiveArmor(float armor) { return armor / 3; }
@@ -60,19 +65,6 @@ public:
 	// Base Health = (Level * Level) - (Level) + (10)
 	// Effective Armor = (Armor) / (3)
 	// Effective Endurance = (Endurance + 100) / 100
-	
-	//STATS MAP
-	// Endurance (how much health you get from armor)
-	//    - starts at 0, can get from leveling & armor
-	//
-	// Vitality (how fast you regenerate health)
-	//    - starts at 0, can get from leveling & armor
-	//
-	// Charisma (how cheap you can acquire items)
-	//    - starts at 0, can get from leveling & armor
-	//
-	// Agility (how many tiles you can move per turn)
-	//    - starts at 1, can only get from armor
 
 	//ARMOR MAP
 	// Helmet - 2 Base Points
@@ -84,6 +76,6 @@ public:
 	// Belt - 1 Base Point
 	// Leggings - 3 Base Points
 	// Boots - 2 Base Points
-
-private:
 };
+
+#endif

@@ -3,7 +3,12 @@
 /x64/*
 *.sln
 *.VC.db
+*.VC.VC.opendb
+*.VC.opendb
+*.opendb
 *.db
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj.users
 *.filters
+*.users

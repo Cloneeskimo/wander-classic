@@ -1,19 +1,22 @@
-#pragma once
+
+#ifndef AttackManager_h
+#define AttackManager_h
+
+//Includes
 #include <vector>
 #include <thread>
 #include <chrono>
 #include <map>
-#include "item.h"
-#include "player.h"
-#include "enemy.h"
+#include <Item.h>
+#include <entity/Player.h>
+#include <entity/Enemy.h>
 
-//Structs
-struct WeaponSkill
-{
-	//Contructor
-	WeaponSkill() {};
-	WeaponSkill(ItemSubType weapon, std::string name, std::string description, std::string effectCode, int level, int cooldown)
-	{
+//WeaponSkill Struct
+struct WeaponSkill {
+
+	//Contructors
+	WeaponSkill() {}; //default
+	WeaponSkill(ItemSubType weapon, std::string name, std::string description, std::string effectCode, int level, int cooldown) { //full
 		this->weapon = weapon;
 		this->name = name;
 		this->description = description;
@@ -22,7 +25,7 @@ struct WeaponSkill
 		this->cooldown = cooldown;
 	}
 
-	//Variables
+	//Data
 	ItemSubType weapon;
 	std::string name;
 	std::string description;
@@ -30,43 +33,45 @@ struct WeaponSkill
 	int level;
 	int cooldown;
 };
-struct Cooldown
-{
-	//Constructor
-	Cooldown() {};
-	Cooldown(std::string skillName, std::string playerName, int turnsLeft)
-	{
+
+//Cooldown Struct
+struct Cooldown {
+
+	//Constructors
+	Cooldown() {}; //default
+	Cooldown(std::string skillName, std::string playerName, int turnsLeft) { //full
 		this->skillName = skillName;
 		this->playerName = playerName;
 		this->turnsLeft = turnsLeft;
 	}
 
-	//Variables
+	//Data
 	std::string skillName;
 	std::string playerName;
 	int turnsLeft;
 };
-struct IndicatorInfo
-{
-	//Constructor
-	IndicatorInfo() {};
-	IndicatorInfo(bool rightSide, ColorString indicator, bool displayIndicator, ColorString message = ColorString("", ColorFlag::GRAY, 0, 10000, true))
-	{
+
+//IndicatorInfo Struct
+struct IndicatorInfo {
+
+	//Constructors
+	IndicatorInfo() {}; //default
+	IndicatorInfo(bool rightSide, ColorString indicator, bool displayIndicator, ColorString message = ColorString("", ColorFlag::GRAY, 0, 10000, true)) { //full
 		this->rightSide = rightSide;
 		this->indicator = indicator;
 		this->displayIndicator = displayIndicator;
 		this->message = message;
 	}
 
-	//Variables
+	//Data
 	bool rightSide = true;
 	bool displayIndicator = false;
 	ColorString indicator;
 	ColorString message;
 };
 
-static class AttackManager
-{
+//AttackManager Class
+static class AttackManager {
 public:
 
 	//Functions
@@ -85,7 +90,9 @@ public:
 
 private:
 
-	//Variables
+	//Data
 	static std::vector<WeaponSkill> _weaponSkills;
 	static std::vector<Cooldown> _cooldowns;
 };
+
+#endif

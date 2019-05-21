@@ -1,21 +1,26 @@
-#pragma once
+
+#ifndef GameEngine_h
+#define GameEngine_h
+
+//Includes
 #include <vector>
 #include <thread>
 #include <chrono>
-#include "map.h"
-#include "entity.h"
-#include "player.h"
-#include "optionsManager.h"
-#include "saveManager.h"
-#include "storyManager.h"
-#include "calcManager.h"
-#include "colorManager.h"
-#include "attackManager.h"
+#include <Map.h>
+#include <entity/Entity.h>
+#include <entity/Player.h>
+#include <managers/OptionsManager.h>
+#include <managers/SaveManager.h>
+#include <managers/StoryManager.h>
+#include <managers/CalcManager.h>
+#include <managers/ColorManager.h>
+#include <managers/AttackManager.h>
 
-const static int BUILD_NUMBER = 483;
+//Build Number
+const static int BUILD_NUMBER = 488;
 
-class GameEngine
-{
+//GameEngine Class
+class GameEngine {
 public:
 
 	//Functions
@@ -23,13 +28,15 @@ public:
 
 private:
 
-	//Variables
-	std::string _saveName;
+	//Collection Data
 	std::vector<Map> _archiveMaps;
 	std::vector<EnemyInfo> _gameEnemies;
 	std::vector<Player> _gamePlayers;
-	std::vector<Coord> _gateLocs;
+	std::vector<Coordinate> _gateLocs;
 	std::vector<int> _pastEvents;
+
+	//Other Data
+	std::string _saveName;
 	StoryInfo _storyInfo;
 	Map _currentMap;
 	bool _isOver = false;
@@ -57,12 +64,14 @@ private:
 	void displayBattleState(int* turn, int* enemyTarget, int* playerTarget, int* attackSelection, std::vector<Player*> players, std::vector<EnemyInfo*> enemies, std::vector<std::string>* attackOptions);
 	bool battle(std::vector<Player*> players, std::vector<EnemyInfo*> enemies, bool enemyAttackedFirst = false); //Returns True -> Battle Won
 	void setEnemyTarget(std::vector<Player*> players, int* enemyTarget);
-	
-	//Miscellaneous
+
+	//Miscellaneous Functions
 	void display(bool displayExtras = false);
 	void handleCollision(Collision collision, bool* turnSpent);
-	void travelToMap(std::string mapFileSource, std::vector<Coord> locations);
+	void travelToMap(std::string mapFileSource, std::vector<Coordinate> locations);
 	void getBattleParticipants(int x, int y, std::vector<Player*>* players, std::vector<EnemyInfo*>* enemies, bool enemyAttacked);
 	bool isPastEvent(int eventCode);
 	std::vector<int> getJournalCodes();
 };
+
+#endif

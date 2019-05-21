@@ -1,34 +1,34 @@
-#include "clfram.h"
+#include "Clfram.h"
 
-/*Utility Functions*/
+//Utility Functions
 namespace clUtil {
-	void error(string message, string tag, int code, string location, string fileName, string flags)
-	{
-		/*Will handle an error based on extensive paramaters*/
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	void error(string message, string tag, int code, string location, string fileName, string flags) {
+
+		//handles an error based on received parameters
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		SYSTEMTIME time;
 		GetLocalTime(&time);
-#endif
+		#endif
 		if (flags.find("DO_LOG") != std::string::npos) { //Will Log Error
 			ifstream test;
 			ofstream write;
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 			write.open(location + fileName + " " + to_string(time.wMonth) + "-" + to_string(time.wDay) + "-" + to_string(time.wYear) + ".txt", ios::app);
-#else
+			#else
 			int logNum = 0;
 			while (!test.fail()) {
-			test.close();
-			logNum++;
-			test.open("errorLog" + to_string(logNum + 1) + ".txt");
+				test.close();
+				logNum++;
+				test.open("errorLog" + to_string(logNum + 1) + ".txt");
 			}
 			if (logNum == 0) {
 				write.open("errorLog.txt");
 			} else {
 				write.open("errorLog" + to_string(logNum + 1) + ".txt");
 			}
-#endif
+			#endif
 
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+			#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 			std::string precursor = "[";
 			if (time.wMonth < 10) {
 				precursor += "0";
@@ -52,7 +52,7 @@ namespace clUtil {
 			precursor += to_string(time.wSecond) + "]";
 
 			write << precursor;
-#endif
+			#endif
 			write << "[" << tag << "]: " << message << " (Code: " << code << ")" << endl;
 			write.close();
 		}
@@ -66,8 +66,7 @@ namespace clUtil {
 		}
 		return;
 	}
-	string implode(vector<string> toImplode, bool addNewLine)
-	{
+	string implode(vector<string> toImplode, bool addNewLine) {
 		string imploded = "";
 		for (int i = 0; i < toImplode.size(); i++) {
 			imploded += toImplode[i];
@@ -77,8 +76,7 @@ namespace clUtil {
 		}
 		return imploded;
 	}
-	vector<string> explode(string toExplode, char atThis, bool removeSpaces)
-	{
+	vector<string> explode(string toExplode, char atThis, bool removeSpaces) {
 		vector<string> toReturn;
 		string next;
 		bool justAdded = false;
@@ -96,8 +94,7 @@ namespace clUtil {
 		toReturn.push_back(next);
 		return toReturn;
 	}
-	string uppercase(string toConvert, int lengthToUpper)
-	{
+	string uppercase(string toConvert, int lengthToUpper) {
 		string newString = "";
 		for (int i = 0; i < toConvert.length(); i++) {
 			if (i < lengthToUpper) {
@@ -108,8 +105,7 @@ namespace clUtil {
 		}
 		return newString;
 	}
-	string lowercase(string toConvert, int lengthToLower)
-	{
+	string lowercase(string toConvert, int lengthToLower) {
 		string newString = "";
 		for (int i = 0; i < toConvert.length(); i++) {
 			if (i < lengthToLower) {
@@ -120,21 +116,19 @@ namespace clUtil {
 		}
 		return newString;
 	}
-	string boolToWord(bool toConvert, string isTrue, string isFalse)
-	{
+	string boolToWord(bool toConvert, string isTrue, string isFalse) {
 		if (toConvert) {
 			return isTrue;
 		} else {
 			return isFalse;
 		}
 	}
-	void quit()
-	{
+	void quit() {
 		exit(1);
 	}
-	bool containsOnlyLetters(string doesThis)
-	{
-		//Test Each Letter
+	bool containsOnlyLetters(string doesThis) {
+
+		//test each letter
 		for (int i = 0; i < doesThis.length(); i++) {
 			if (!((doesThis[i] >= 65 && doesThis[i] <= 90) || (doesThis[i] >= 97 && doesThis[i] <= 122))) {
 				return false;
@@ -142,8 +136,7 @@ namespace clUtil {
 		}
 		return true;
 	}
-	int wordCount(string howMany)
-	{
+	int wordCount(string howMany) {
 		int wordCount = 0;
 		bool hasBegun = false;
 		bool justSpaced = false;
@@ -164,11 +157,9 @@ namespace clUtil {
 	}
 }
 
-/*Display Functions*/
+//Display Functions
 namespace clCons {
-	void paus(string pauseMessage)
-	{
-		/*Same functionality as system pause but better*/
+	void paus(string pauseMessage) {
 		if (pauseMessage == "LEAVE AS DEFAULT PARAMETER FOR DEFAULT MSG") {
 			clCons::advDisp("Press anything to continue");
 		} else {
@@ -177,18 +168,16 @@ namespace clCons {
 		char temp = _getch();
 		return;
 	}
-	void cls()
-	{
+	void cls() {
 		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-			system("cls");
-			return;
+		system("cls");
+		return;
 		#endif
 		for (int i = 0; i < 1000; i++) {
 			cout << " ";
 		}
 	}
-	void clsNew()
-	{
+	void clsNew() {
 		HANDLE hOut;
 		COORD Position;
 
@@ -198,10 +187,8 @@ namespace clCons {
 		Position.Y = 0;
 		SetConsoleCursorPosition(hOut, Position);
 	}
-	int getConsoleWidth()
-	{
-		/*Will get the width of the console*/
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	int getConsoleWidth() {
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
 			clUtil::error("Could not determine width of console screen", "GDC++LIB", 0, "", "GDC++LIB ERRORLOG");
@@ -209,13 +196,11 @@ namespace clCons {
 		} else {
 			return csbi.srWindow.Right - csbi.srWindow.Left + 1;
 		}
-#endif
+		#endif
 		return 0;
 	}
-	int getConsoleHeight()
-	{
-	/*Will get the height of the console*/
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	int getConsoleHeight() {
+		#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
 			clUtil::error("Could not determine height of console screen", "CLFRAM_H", 0, "", "CLFRAM_ERROR", "DO_DISPLAY DO_LOG FATAL_ERROR");
@@ -223,12 +208,12 @@ namespace clCons {
 		} else {
 			return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 		}
-#endif
+		#endif
 		return 0;
 	}
-	int menu(string topMsg, string bottomMsg, vector<string> menuItems, char compliment, char returnInput, int returnOption)
-	{
-		/*Creates a menu UI, returns what choice is chosen by user*/
+	int menu(string topMsg, string bottomMsg, vector<string> menuItems, char compliment, char returnInput, int returnOption) {
+		
+		//creates a menu UI with the given parameters and returns the option selected by the user
 		int selection = 1;
 		char input;
 		while (1) {
@@ -270,16 +255,16 @@ namespace clCons {
 			}
 		}
 	}
-	int numberChooser(string prompt, int bottomMargin, int topMargin)
-	{
-		//Variables
+	int numberChooser(string prompt, int bottomMargin, int topMargin) {
+
+		//variables
 		int input = 1;
 		int selection = bottomMargin;
 		int screenWidth = clCons::getConsoleWidth();
 		int displayWidth = (clCons::getConsoleWidth() * 2) / 3;
 		std::string markerString = "";
-		
-		//Marker Calculation
+
+		//marker calculation
 		int effTopMarg = topMargin - bottomMargin;
 		int effBotMarg = 0;
 		int effSelec = selection - bottomMargin;
@@ -287,7 +272,8 @@ namespace clCons {
 
 		clCons::cls();
 		while (!(input == 13 || input == 32)) {
-			//Update Measurements
+
+			//update measurements
 			int oldWidth = screenWidth;
 			screenWidth = clCons::getConsoleWidth();
 			if (oldWidth != screenWidth) {
@@ -295,22 +281,22 @@ namespace clCons {
 			} else {
 				clCons::clsNew();
 			}
-			displayWidth = (clCons::getConsoleWidth() * 2) / 3; 
+			displayWidth = (clCons::getConsoleWidth() * 2) / 3;
 
-			//Marker Calculation
+			//marker calculation
 			effTopMarg = topMargin - bottomMargin;
 			effBotMarg = 0;
 			effSelec = selection - bottomMargin;
 			markerLocation = (int)(((double)effSelec / (double)effTopMarg) * (double)displayWidth);
 
-			//Hard-Set Marker Locations
+			//hard-set marker locations
 			if (selection == bottomMargin) {
 				markerLocation = 0;
 			} else if (selection == topMargin) {
 				markerLocation = displayWidth - 1;
 			}
 
-			//Marker Pre-Display
+			//marker pre-display
 			markerString = "<";
 			for (int i = 0; i < displayWidth; i++) {
 				if (i == markerLocation) {
@@ -321,36 +307,34 @@ namespace clCons {
 			}
 			markerString += ">";
 
-			//Display
+			//display
 			clCons::centerVer(4);
 			clCons::centerHor(prompt + " (" + to_string(selection) + "/" + to_string(topMargin) + ")", ' ', 2);
 			clCons::centerHor(markerString);
 
-			//Grab Input
+			//grab input
 			input = _getch();
 
-			//Act On Input
+			//act on input
 			switch (input) {
-			case 'D':
-			case 'd':
-				selection++;
-				if (selection > topMargin)
-					selection = topMargin;
-				break;
-			case 'A':
-			case 'a':
-				selection--;
-				if (selection < bottomMargin)
-					selection = bottomMargin;
-				break;
+				case 'D':
+				case 'd':
+					selection++;
+					if (selection > topMargin)
+						selection = topMargin;
+					break;
+				case 'A':
+				case 'a':
+					selection--;
+					if (selection < bottomMargin)
+						selection = bottomMargin;
+					break;
 			}
 		}
 
 		return selection;
 	}
-	void advDisp(string toDisplay, int newLines, int afterSpaces, int inBetweenSpaces)
-	{
-		/*Displays a string with multiple display options*/
+	void advDisp(string toDisplay, int newLines, int afterSpaces, int inBetweenSpaces) {
 		for (int i = 0; i < toDisplay.size(); i++) {
 			cout << toDisplay[i];
 			if (i != toDisplay.size() - 1) {
@@ -367,9 +351,7 @@ namespace clCons {
 		}
 		return;
 	}
-	void centerHor(string toDisplay, char spaces, int afterlines)
-	{
-		/*Will display something horizontally centered*/
+	void centerHor(string toDisplay, char spaces, int afterlines) {
 		int width = clCons::getConsoleWidth();
 		if (toDisplay.size() > width) {
 			cout << toDisplay;
@@ -387,9 +369,7 @@ namespace clCons {
 			cout << endl;
 		}
 	}
-	void centerVer(int linesToBeCentered)
-	{
-		/*Centers vertically by just outputting lines*/
+	void centerVer(int linesToBeCentered) {
 		int height = clCons::getConsoleHeight();
 		int width = clCons::getConsoleWidth();
 		if (linesToBeCentered > height) {
@@ -400,8 +380,7 @@ namespace clCons {
 			cout << endl;
 		}
 	}
-	void centerVerhor(int linesToBeCentered, string toDisplay, char spaces, int afterlines, bool cls)
-	{
+	void centerVerhor(int linesToBeCentered, string toDisplay, char spaces, int afterlines, bool cls) {
 		if (cls) {
 			if (clOption::USE_CLS_NEW) {
 				clsNew();
@@ -413,8 +392,7 @@ namespace clCons {
 		centerHor(toDisplay, spaces, afterlines);
 		return;
 	}
-	string centerStringIn(int width, string centerThis, int rightOffSet)
-	{
+	string centerStringIn(int width, string centerThis, int rightOffSet) {
 		std::string toReturn = "";
 		int beforeSpaces = ((width - rightOffSet) / 2) - (centerThis.size() / 2);
 		for (int i = 0; i < beforeSpaces; i++) {
@@ -423,13 +401,13 @@ namespace clCons {
 		toReturn += centerThis;
 		return toReturn;
 	}
-	string advInput(string prompt)
-	{
-		//Variables
+	string advInput(string prompt) {
+
+		//variables
 		std::string input;
 		char nextChar = ' ';
 
-		//Input Loop
+		//input loop
 		while (nextChar != 13) {
 			if (input == " ") {
 				input = "";
@@ -453,11 +431,9 @@ namespace clCons {
 	}
 }
 
-/*File IO Functions*/
+//File IO Functions
 namespace clFile {
-	string read(string location, int y, int x, bool readLineRatherThanSpace)
-	{
-		/*Opens a file and reads from it*/
+	string read(string location, int y, int x, bool readLineRatherThanSpace) {
 		ifstream read;
 		string result;
 		read.open(location);
@@ -477,18 +453,18 @@ namespace clFile {
 		read.close();
 		return result;
 	}
-	string cut(ifstream* read)
-	{
-		//Variables
+	string cut(ifstream* read) {
+
+		//variables
 		std::string toReturn;
 		bool inLoop = true;
 
-		//Get Information
+		//get information
 		while (toReturn == "" || toReturn == "\n" || toReturn == " ") {
 			getline(*read, toReturn);
 		}
 
-		//Cut to Colon
+		//cut to colon
 		for (int i = 0; inLoop; i++) {
 			if (toReturn[i] == ':') {
 				toReturn = toReturn.substr(i + 1, toReturn.size() - (i + 1));
@@ -496,7 +472,7 @@ namespace clFile {
 			}
 		}
 
-		//Cut to value
+		//cut to value
 		inLoop = true;
 		for (int j = 0; inLoop; j++) {
 			if (toReturn[j] != ' ') {
@@ -505,16 +481,16 @@ namespace clFile {
 			}
 		}
 
-		//Return Value
+		//return value
 		return toReturn;
 	}
-	string cut(string cutThis)
-	{
-		//Variables
+	string cut(string cutThis) {
+
+		//variables
 		std::string toReturn = cutThis;
 		bool inLoop = true;
 
-		//Cut to Colon
+		//cut to colon
 		for (int i = 0; inLoop; i++) {
 			if (toReturn[i] == ':') {
 				toReturn = toReturn.substr(i + 1, toReturn.size() - (i + 1));
@@ -522,7 +498,7 @@ namespace clFile {
 			}
 		}
 
-		//Cut to value
+		//cut to value
 		inLoop = true;
 		for (int j = 0; inLoop; j++) {
 			if (toReturn[j] != ' ') {
@@ -531,12 +507,10 @@ namespace clFile {
 			}
 		}
 
-		//Return Value
+		//return value
 		return toReturn;
-}
-	vector<string> readBlock(string location, int y, bool untilChar, char until, int lines, bool entireFile)
-	{
-		/*Opens a file and reads from it*/
+	}
+	vector<string> readBlock(string location, int y, bool untilChar, char until, int lines, bool entireFile) {
 		ifstream read;
 		vector<string> result;
 		string nextLine;
@@ -577,75 +551,11 @@ namespace clFile {
 		}
 		return result;
 	}
-	void layoutDataSegment(ofstream * write, dataSegment segment, int tabs)
-	{
-		std::string tabsString = "";
-		for (int i = 0; i < tabs; i++) {
-			tabsString += "\t";
-		}
-		(*write) << tabsString << segment.title << ":";
-		if (segment.childSegments.size() > 0) {
-			(*write) << std::endl << tabsString << "{" << std::endl;
-			for (int i = 0; i < segment.childSegments.size(); i++) {
-				layoutDataSegment(write, segment.childSegments[i], tabs + 1);
-			}
-			(*write) << tabsString << "}" << std::endl;
-		} else {
-			(*write) << " " << segment.value << std::endl;
-		}
-	}
-	dataSegment readDataSegment(ifstream * read, int tabs, bool* endingBracket)
-	{
-		//Variables
-		dataSegment data = dataSegment("PLACEHOLDER");
-		std::string nextLine;
-
-		//Get Line
-		getline(*read, nextLine);
-		if (nextLine.find("}") != std::string::npos) {
-			(*endingBracket) = true;
-			return dataSegment("ENDING BRACKET");
-		}
-
-		//Determine Segment Title
-		data.title = nextLine.substr(tabs, nextLine.length() - tabs);
-		bool afterColon = false;
-		for (int i = 0; i < data.title.size(); i++) {
-			if (data.title[i] == ':' && !afterColon)
-				afterColon = true;
-			if (afterColon) {
-				data.title.erase(data.title.begin() + i);
-				i--;
-			}
-		}
-
-		//If Segment Has Children
-		if (clFile::cut(nextLine) == "") {
-			getline(*read, nextLine);
-			bool endOfChildren = false;
-
-			while (!endOfChildren) {
-				data.childSegments.push_back(readDataSegment(read, tabs + 1, &endOfChildren));
-
-				if (endOfChildren) {
-					data.childSegments.pop_back();
-				}
-			}
-		}
-
-		//Otherwise
-		else {
-			data.value = clFile::cut(nextLine);
-		}
-
-		return data;
-	}
 }
 
-/*Mathematical Functions*/
+//Mathematical Functions
 namespace clMath {
-	int abVal(int abThis, bool returnNegative)
-	{
+	int abVal(int abThis, bool returnNegative) {
 		int abVal = 0;
 		while (abThis != 0) {
 			if (abThis < 0) {

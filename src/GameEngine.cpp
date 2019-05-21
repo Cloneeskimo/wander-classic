@@ -1,65 +1,66 @@
-#include "gameEngine.h"
+
+#include "GameEngine.h"
 
 //Initializer
-void GameEngine::init()
-{
-	//Console Title
-	system(("Title Wander B:" + to_string(BUILD_NUMBER)).c_str());
+void GameEngine::init() {
+	
+	//console title
+	system(("Title Wander Classic B:" + to_string(BUILD_NUMBER)).c_str());
 
-	//Load Game Options
+	//load game options
 	OptionsManager::loadOptions();
 
-	//Define Menu Options
+	//define menu options
 	std::vector<std::string> menuOptions;
 	menuOptions.push_back("New Game");
 	menuOptions.push_back("Load Game");
 	menuOptions.push_back("Options");
 	menuOptions.push_back("Quit");
 
-	//Menu Loop
+	//menu loop
 	while (!this->_hasQuit) {
 		clCons::cls();
 		int menuNav = ColorManager::menu(ColorFlag::GRAY, "[Wander]", ColorFlag::GRAY, "[Build " + to_string(BUILD_NUMBER) + "]", ColorFlag::GRAY, menuOptions);
 		switch (menuNav) {
 
 			// NEW GAME
-		case 1: { 
-			bool returned = false;
-			SaveInfo toImplement = SaveManager::newGame(&returned);
-			if (!returned) {
-				implementSave(toImplement);
-			}
-			break; }
+			case 1: {
+				bool returned = false;
+				SaveInfo toImplement = SaveManager::newGame(&returned);
+				if (!returned) {
+					implementSave(toImplement);
+				}
+				break; }
 
 			// LOAD GAME
-		case 2: { 
-			bool returned = false;
- 			SaveInfo toImplement = SaveManager::loadGame(&returned);
-			if (!returned) {
-				implementSave(toImplement);
-			}
-			break; }
+			case 2: {
+				bool returned = false;
+				SaveInfo toImplement = SaveManager::loadGame(&returned);
+				if (!returned) {
+					implementSave(toImplement);
+				}
+				break; }
 
 			// OPTIONS
-		case 3: 
-			optionsLoop();
-			break;
+			case 3:
+				optionsLoop();
+				break;
 
 			// QUIT
-		case 4: 
-			_hasQuit = true;
-			break;
+			case 4:
+				_hasQuit = true;
+				break;
 		};
 	}
 }
 
 //Save Functions
-void GameEngine::saveGame()
-{
-	//Create SaveInfo
+void GameEngine::saveGame() {
+
+	//create save info
 	SaveInfo saveInfo{};
 
-	//Add Information
+	//add Information
 	saveInfo.saveName = this->_saveName;
 	saveInfo.currentEnemies = this->_gameEnemies;
 	saveInfo.currentPlayers = this->_gamePlayers;
@@ -67,37 +68,37 @@ void GameEngine::saveGame()
 	saveInfo.storyInfo = this->_storyInfo;
 	saveInfo.pastEvents = this->_pastEvents;
 
-	//Save
+	//save
 	SaveManager::save(saveInfo);
 
-	//Inform & Pause
+	//inform & pause
 	clCons::cls();
 	clCons::centerVerhor(1, "Game Saved!");
 	clCons::paus("");
 }
-void GameEngine::promptSave()
-{
-	//Variables
+void GameEngine::promptSave() {
+
+	//variables
 	std::vector<std::string> menuOptions;
 	menuOptions.push_back("Yes");
 	menuOptions.push_back("No");
 
-	//Prompt to save before exiting
+	//prompt to save before exiting
 	clCons::cls();
 	int choice = clCons::menu("[Save '" + this->_saveName + "' before exiting?]", "", menuOptions);
-	
-	//Parse Choice
+
+	//parse choice
 	if (choice == 1) {
 		saveGame();
-	} 
+	}
 }
-void GameEngine::implementSave(SaveInfo saveInfo)
-{
-	//Reset Variables
+void GameEngine::implementSave(SaveInfo saveInfo) {
+
+	//reset variables
 	this->_isOver = false;
 	clCons::cls();
 
-	//Implement Loaded Material
+	//implement loaded material
 	if (OptionsManager::loadingMax == 0) {
 		OptionsManager::loadingMax = 5;
 	}
@@ -114,19 +115,19 @@ void GameEngine::implementSave(SaveInfo saveInfo)
 	this->_archiveMaps = std::vector<Map>();
 	this->_pastEvents = saveInfo.pastEvents;
 
-	//Load Events
+	//load events
 	OptionsManager::displayLoading("Loading events...", true);
 	JournalManager::loadEvents(this->_storyInfo.folder);
 
-	//Initialize Random Info
+	//initialize random info
 	OptionsManager::displayLoading("Initializing randomization info...", true);
 	CalcManager::loadRandomInfo(saveInfo.storyInfo.name);
 
-	//Load Weapon skills
+	//load weapon skills
 	OptionsManager::displayLoading("Initializing weapon skill info...", true);
 	AttackManager::loadWeaponSkills(saveInfo.storyInfo.folder);
 
-	//Entrance Event
+	//entrance event
 	std::vector <Player*> players;
 	for (int i = 0; i < this->_gamePlayers.size(); i++) {
 		players.push_back(&this->_gamePlayers[i]);
@@ -138,19 +139,19 @@ void GameEngine::implementSave(SaveInfo saveInfo)
 		}
 	}
 
-	//Begin Game
+	//begin game
 	clCons::cls();
 	gameLoop();
 }
 
 //Loops & Menus
-void GameEngine::optionsLoop()
-{
-	//Options menu variables
+void GameEngine::optionsLoop() {
+
+	//options menu variables
 	bool hasReturned = false;
 	int selection;
 
-	//Options menu options
+	//options menu options
 	std::vector<std::string> menuOptions;
 	menuOptions.push_back("Background Color: " + OptionsManager::getColorOption());
 	menuOptions.push_back("Fast Text: " + clUtil::boolToWord(OptionsManager::fastText, "on", "off"));
@@ -159,61 +160,62 @@ void GameEngine::optionsLoop()
 	menuOptions.push_back("Difficulty: " + OptionsManager::getDifficultyOption());
 	menuOptions.push_back("Return");
 
-	//Menu Loop
+	//nenu loop
 	while (!hasReturned) {
 		clCons::cls();
 		selection = ColorManager::menu(ColorFlag::GRAY, "[Options]", ColorFlag::GRAY, "", ColorFlag::GRAY, menuOptions, '-', '\033', menuOptions.size());
 		switch (selection) {
-		case 1: //Background Color
-			OptionsManager::backgroundWhite = !OptionsManager::backgroundWhite;
-			menuOptions[0] = "Background Color: " + OptionsManager::getColorOption();
-			OptionsManager::updateColors();
-			break;
-		case 2: //Fast Text
-			OptionsManager::fastText = !OptionsManager::fastText;
-			menuOptions[1] = ("Fast Text: " + clUtil::boolToWord(OptionsManager::fastText, "on", "off"));
-			break;
-		case 3: //Fast Movement
-			OptionsManager::fastMovement = !OptionsManager::fastMovement;
-			menuOptions[2] = ("Fast Movement: " + clUtil::boolToWord(OptionsManager::fastMovement, "on", "off"));
-			break;
-		case 4: //Fast Combat
-			OptionsManager::fastCombat = !OptionsManager::fastCombat;
-			menuOptions[3] = ("Fast Combat: " + clUtil::boolToWord(OptionsManager::fastCombat, "on", "off"));
-			break;
-		case 5: //Difficulty
-			OptionsManager::difficulty++;
-			if (OptionsManager::difficulty > 2) {
-				OptionsManager::difficulty = 0;
-			}
-			menuOptions[4] = "Difficulty: " + OptionsManager::getDifficultyOption();
-			break;
-		case 6: //Return
-			hasReturned = true;
-			break;
+			case 1: //Background Color
+				OptionsManager::backgroundWhite = !OptionsManager::backgroundWhite;
+				menuOptions[0] = "Background Color: " + OptionsManager::getColorOption();
+				OptionsManager::updateColors();
+				break;
+			case 2: //Fast Text
+				OptionsManager::fastText = !OptionsManager::fastText;
+				menuOptions[1] = ("Fast Text: " + clUtil::boolToWord(OptionsManager::fastText, "on", "off"));
+				break;
+			case 3: //Fast Movement
+				OptionsManager::fastMovement = !OptionsManager::fastMovement;
+				menuOptions[2] = ("Fast Movement: " + clUtil::boolToWord(OptionsManager::fastMovement, "on", "off"));
+				break;
+			case 4: //Fast Combat
+				OptionsManager::fastCombat = !OptionsManager::fastCombat;
+				menuOptions[3] = ("Fast Combat: " + clUtil::boolToWord(OptionsManager::fastCombat, "on", "off"));
+				break;
+			case 5: //Difficulty
+				OptionsManager::difficulty++;
+				if (OptionsManager::difficulty > 2) {
+					OptionsManager::difficulty = 0;
+				}
+				menuOptions[4] = "Difficulty: " + OptionsManager::getDifficultyOption();
+				break;
+			case 6: //Return
+				hasReturned = true;
+				break;
 		}
 	}
 
 	OptionsManager::updateOptions();
 	return;
 }
-void GameEngine::gameLoop()
-{
-	//Game Loop
+void GameEngine::gameLoop() {
+
+	//game loop
 	while (!this->_isOver) {
-		//Update Entities on Map
+
+		//update entities on map
 		this->_currentMap.updateEntities(&this->_gameEnemies, &this->_gamePlayers);
 
-		//Display Map
+		//display map
 		display();
 
-		//Take Entity Turns
+		//take entity turns
 		takeEntityTurns();
 	}
 }
-void GameEngine::pauseMenu()
-{
-	//Variables
+void GameEngine::pauseMenu() {
+
+	//variables
 	int input;
 	bool didReturn = false;
 	bool hasSaved = false;
@@ -228,8 +230,8 @@ void GameEngine::pauseMenu()
 
 	while (!didReturn) {
 		clCons::cls();
-		
-		//Grab Input
+
+		//grab input
 		bool finished = false;
 		int selection = 1;
 		char input;
@@ -282,71 +284,70 @@ void GameEngine::pauseMenu()
 			} else if (input == '\033') { //RETURN
 				selection = 5;
 				finished = true;
-			} 
+			}
 		}
 
-		//Parse Input
+		//parse input
 		switch (selection) {
-		case 1: // CHARACTER
-			this->_gamePlayers[this->_entityTurn].openCharacter();
-			break;
-		case 2: // INVENTORY
-			this->_gamePlayers[this->_entityTurn].openInventory();
-			break;
-		case 3: // WEAPON SKILLS
-			AttackManager::openWeaponSkills(&this->_gamePlayers[this->_entityTurn]);
-			break;
-		case 4: //JOURNAL
-			JournalManager::openJournal(this->getJournalCodes());
-			break;
-		case 5: // RETURN
-			didReturn = true;
-			break;
-		case 6: // SAVE GAME
-			saveGame();
-			hasSaved = true;
-			break;
-		case 7: // EXIT GAME
-			if (!hasSaved) {
-				promptSave();
-			}
-			this->_isOver = true;
-			didReturn = true;
-			break;
+			case 1: // CHARACTER
+				this->_gamePlayers[this->_entityTurn].openCharacter();
+				break;
+			case 2: // INVENTORY
+				this->_gamePlayers[this->_entityTurn].openInventory();
+				break;
+			case 3: // WEAPON SKILLS
+				AttackManager::openWeaponSkills(&this->_gamePlayers[this->_entityTurn]);
+				break;
+			case 4: //JOURNAL
+				JournalManager::openJournal(this->getJournalCodes());
+				break;
+			case 5: // RETURN
+				didReturn = true;
+				break;
+			case 6: // SAVE GAME
+				saveGame();
+				hasSaved = true;
+				break;
+			case 7: // EXIT GAME
+				if (!hasSaved) {
+					promptSave();
+				}
+				this->_isOver = true;
+				didReturn = true;
+				break;
 		}
 	}
 }
 
 //Entity Turn Taking
-void GameEngine::takeEntityTurns()
-{
+void GameEngine::takeEntityTurns() {
 	for (_entityTurn = 0; _entityTurn < this->_gamePlayers.size() + this->_gameEnemies.size(); _entityTurn++) {
 		if (!this->_isOver) {
 			if (_entityTurn < this->_gamePlayers.size()) { //PLAYERS
 
-				//Display Turn
+				//display turn
 				display(true);
 				takePlayerTurn();
 
-				//Take Turn
+				//take turn
 				if (!this->_isOver) {
 					_gamePlayers[_entityTurn].passiveUpdate();
 					this->_currentMap.updateEntities(&this->_gameEnemies, &this->_gamePlayers);
 					display(true);
 				}
 			} else { //ENEMIES
-				
+
 				if (_gameEnemies[_entityTurn - this->_gamePlayers.size()].map == this->_currentMap.getName()) {
 
-					//Display Turn
+					//display turn
 					display(true);
 
-					//Take Turn
+					//take turn
 					if (!OptionsManager::fastMovement) {
 						std::this_thread::sleep_for(std::chrono::milliseconds(200));
 					}
 
-					//Calculate Effective Enemies
+					//calculate effective enemies
 					_effectiveEnemies = 0;
 					for (int i = 0; i < this->_gameEnemies.size(); i++) {
 						if (this->_gameEnemies[i].map == this->_currentMap.getName()) {
@@ -354,10 +355,10 @@ void GameEngine::takeEntityTurns()
 						}
 					}
 
-					//Take Turn
+					//take turn
 					takeEnemyTurn();
-					
-					//Account for possible enemy loss
+
+					//account for possible enemy loss
 					int newEnemyCount = 0;
 					for (int i = 0; i < this->_gameEnemies.size(); i++) {
 						if (this->_gameEnemies[i].map == this->_currentMap.getName()) {
@@ -369,86 +370,87 @@ void GameEngine::takeEntityTurns()
 						this->_effectiveEnemies--;
 					}
 
-					//Update
+					//update
 					this->_currentMap.updateEntities(&this->_gameEnemies, &this->_gamePlayers);
 					display(true);
-				}				
+				}
 			}
-		} 
+		}
 	}
 }
-void GameEngine::takePlayerTurn()
-{
-	//Variables
+void GameEngine::takePlayerTurn() {
+
+	//variables
 	bool turnTaken = false;
 
 	while (!turnTaken) {
-		//Grab Input
+		
+		//grab input
 		char input = _getch();
 
-		//Act On Input
+		//act on input
 		switch (input) {
-		case 27: //ESCAPE -> EXIT GAME
-			pauseMenu();
-			clCons::cls();
-			display(true);
-			break;
-		case 'w': //w - MOVE PLAYER UP
-		case 'W':
-			handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::UP, this->_gateLocs), &turnTaken);
-			break;
-		case 's': //s - MOVE PLAYER DOWN
-		case 'S':
-			handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::DOWN, this->_gateLocs), &turnTaken);
-			break;
-		case 'a': //a - MOVE PLAYER LEFT
-		case 'A':
-			handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::LEFT, this->_gateLocs), &turnTaken);
-			break;
-		case 'd': //d - MOVE PLAYER RIGHT
-		case 'D':
-			handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::RIGHT, this->_gateLocs), &turnTaken);
-			break;
-		case 'b': //b - OPEN INVENTORY
-		case 'B':
-			this->_gamePlayers[this->_entityTurn].openInventory();
-			break;
-		case 'c': //c - OPEN CHARACTER
-		case 'C':
-			this->_gamePlayers[this->_entityTurn].openCharacter();
-			break;
-		case 'k': //k - OPEN WEAPON SKILLS
-		case 'K':
-			AttackManager::openWeaponSkills(&this->_gamePlayers[this->_entityTurn]);
-			break;
-		case 'j': //j - OPEN JOURNAL
-		case 'J':
-			JournalManager::openJournal(this->getJournalCodes());
-			break;
-		default:
-			break;
+			case 27: //ESCAPE -> EXIT GAME
+				pauseMenu();
+				clCons::cls();
+				display(true);
+				break;
+			case 'w': //w - MOVE PLAYER UP
+			case 'W':
+				handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::UP, this->_gateLocs), &turnTaken);
+				break;
+			case 's': //s - MOVE PLAYER DOWN
+			case 'S':
+				handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::DOWN, this->_gateLocs), &turnTaken);
+				break;
+			case 'a': //a - MOVE PLAYER LEFT
+			case 'A':
+				handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::LEFT, this->_gateLocs), &turnTaken);
+				break;
+			case 'd': //d - MOVE PLAYER RIGHT
+			case 'D':
+				handleCollision(this->_gamePlayers[_entityTurn].moveEntity(this->_currentMap.getEntityLayout(), Movement::RIGHT, this->_gateLocs), &turnTaken);
+				break;
+			case 'b': //b - OPEN INVENTORY
+			case 'B':
+				this->_gamePlayers[this->_entityTurn].openInventory();
+				break;
+			case 'c': //c - OPEN CHARACTER
+			case 'C':
+				this->_gamePlayers[this->_entityTurn].openCharacter();
+				break;
+			case 'k': //k - OPEN WEAPON SKILLS
+			case 'K':
+				AttackManager::openWeaponSkills(&this->_gamePlayers[this->_entityTurn]);
+				break;
+			case 'j': //j - OPEN JOURNAL
+			case 'J':
+				JournalManager::openJournal(this->getJournalCodes());
+				break;
+			default:
+				break;
 		}
 		if (this->_isOver)
 			break;
-		
+
 		clCons::cls();
 		display(true);
 	}
 }
-void GameEngine::takeEnemyTurn()
-{
-	//Check enemy is on map
+void GameEngine::takeEnemyTurn() {
+
+	//check enemy is on map
 	if (this->_gameEnemies[this->_entityTurn - this->_gamePlayers.size()].map != this->_currentMap.getName()) {
 		return;
 	}
 
-	//Variables
+	//variables
 	int j = this->_entityTurn - this->_gamePlayers.size();
 	int toWhichPlayer = 0;
 	int movesLeft = this->_gameEnemies[j].enemy.getSpeed();
 	bool battleHasNotOccured = true;
 
-	//Determine Agro
+	//determine agro
 	this->_gameEnemies[j].enemy.setAgro(false);
 	for (int i = 0; i < this->_gamePlayers.size(); i++) {
 		if (this->_gamePlayers[i].getX() >= (this->_gameEnemies[j].enemy.getX() - this->_gameEnemies[j].enemy.getAgroDistance()) && this->_gamePlayers[i].getX() <= (this->_gameEnemies[j].enemy.getX() + this->_gameEnemies[j].enemy.getAgroDistance())) { //WITHIN X DISTANCE
@@ -459,24 +461,25 @@ void GameEngine::takeEnemyTurn()
 		}
 	}
 
-	//Move Towards Player If Agroed
+	//move towards player if agroed
 	if (this->_gameEnemies[j].enemy.getAgroed()) {
 		while (movesLeft > 0 && battleHasNotOccured) {
-			//Determine Direction to Agro
+
+			//determine direction to agro
 			int xDistance = this->_gamePlayers[toWhichPlayer].getX() - this->_gameEnemies[j].enemy.getX();
 			int yDistance = this->_gamePlayers[toWhichPlayer].getY() - this->_gameEnemies[j].enemy.getY();
 
-			//Battle if close enough
+			//battle if close enough
 			if (clMath::abVal(xDistance) < 2 && clMath::abVal(yDistance) < 2) {
 				std::vector<Player*> playerParticipants;
 				std::vector<EnemyInfo*> enemyParticipants;
 				getBattleParticipants(this->_gamePlayers[toWhichPlayer].getX(), this->_gamePlayers[toWhichPlayer].getY(), &playerParticipants, &enemyParticipants, true);
-				if (!battle(playerParticipants, enemyParticipants, true)) 
-					this->_isOver = true;	
+				if (!battle(playerParticipants, enemyParticipants, true))
+					this->_isOver = true;
 				battleHasNotOccured = false;
 			}
 
-			//Move In Ideal Direction
+			//move in ideal direction
 			else if (clMath::abVal(xDistance) > clMath::abVal(yDistance)) { //Move in X
 				if (xDistance < 0) { //Move Left
 					this->_gameEnemies[j].enemy.moveEntity(this->_currentMap.getEntityLayout(), Movement::LEFT, this->_gateLocs);
@@ -492,8 +495,8 @@ void GameEngine::takeEnemyTurn()
 			}
 			movesLeft--;
 		}
-		
-	//Move Randomly Otherwise
+
+	//move randomly otherwise
 	} else {
 		bool validMove = false;
 		while (!validMove) {
@@ -502,8 +505,7 @@ void GameEngine::takeEnemyTurn()
 		}
 	}
 }
-void GameEngine::removeDeadEnemies()
-{
+void GameEngine::removeDeadEnemies() {
 	for (int i = _gamePlayers.size(); (i - _gamePlayers.size()) < this->_gameEnemies.size(); i++) {
 		if (this->_gameEnemies[i - _gamePlayers.size()].enemy.getHealth() < 1) {
 			if (i < this->_entityTurn) {
@@ -516,12 +518,12 @@ void GameEngine::removeDeadEnemies()
 }
 
 //Battle Functions
-bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> enemies, bool enemyAttackedFirst)
-{
-	//Clear Screen
+bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> enemies, bool enemyAttackedFirst) {
+	
+	//clear screen
 	clCons::cls();
 
-	//Variables
+	//variables
 	std::vector<ColorString> leftDisplay;
 	std::vector<ColorString> rightDisplay;
 	std::vector<Item> drops;
@@ -538,10 +540,10 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 	if (enemyAttackedFirst)
 		turn = players.size();
 
-	//Battle Loop
+	//battle loop
 	while (result == 0) {
 
-		//Update Variables
+		//update variables
 		bool turnTaken = false;
 		std::vector<std::string> attackOptions;
 		std::vector<IndicatorInfo> indicators = std::vector<IndicatorInfo>();
@@ -551,57 +553,57 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			clCons::cls();
 		}
 
-		//Set Enemy Target
+		//set enemy target
 		setEnemyTarget(players, &enemyTarget);
 
-		//Display
-		displayBattleState(&turn, &enemyTarget, &playerTarget, &attackSelection, players, enemies, &attackOptions);	
-		
-		//Take Player Turn
+		//display
+		displayBattleState(&turn, &enemyTarget, &playerTarget, &attackSelection, players, enemies, &attackOptions);
+
+		//take player turn
 		if (turn < players.size()) {
 			input = _getch();
 
 			switch (input) {
-			case 72: //UP ARROW
-				playerTarget--;
-				if (playerTarget < 0)
-					playerTarget = enemies.size() - 1;
-				break;
-			case 80: //DOWN ARROW
-				playerTarget++;
-				if (playerTarget >= enemies.size())
-					playerTarget = 0;
-				break;
-			case 'w':
-			case 'W': //W
-				attackSelection--;
-				if (attackSelection < 0) {
-					attackSelection = attackOptions.size() - 1;
-				}
-				break;
-			case 's':
-			case 'S': //S
-				attackSelection++;
-				if (attackSelection >= attackOptions.size()) {
-					attackSelection = 0;
-				}
-				break;
-			case 13: //ENTER
-			case 32: //SPACE
-				if (attackOptions[attackSelection][attackOptions[attackSelection].length() - 2] == '0') { //IF OPTION ISN'T ON COOLDOWN
-					std::vector<Enemy*> enemyPtrs;
-					for (int i = 0; i < enemies.size(); i++) {
-						enemyPtrs.push_back(&enemies[i]->enemy);
+				case 72: //UP ARROW
+					playerTarget--;
+					if (playerTarget < 0)
+						playerTarget = enemies.size() - 1;
+					break;
+				case 80: //DOWN ARROW
+					playerTarget++;
+					if (playerTarget >= enemies.size())
+						playerTarget = 0;
+					break;
+				case 'w':
+				case 'W': //W
+					attackSelection--;
+					if (attackSelection < 0) {
+						attackSelection = attackOptions.size() - 1;
 					}
-					AttackManager::applyWeaponSkill(&indicators, players, turn, enemyPtrs, playerTarget, attackSelection);
-					turnTaken = true;
-					AttackManager::updateCooldowns(players[turn]);
-				}
-				break;
+					break;
+				case 's':
+				case 'S': //S
+					attackSelection++;
+					if (attackSelection >= attackOptions.size()) {
+						attackSelection = 0;
+					}
+					break;
+				case 13: //ENTER
+				case 32: //SPACE
+					if (attackOptions[attackSelection][attackOptions[attackSelection].length() - 2] == '0') { //IF OPTION ISN'T ON COOLDOWN
+						std::vector<Enemy*> enemyPtrs;
+						for (int i = 0; i < enemies.size(); i++) {
+							enemyPtrs.push_back(&enemies[i]->enemy);
+						}
+						AttackManager::applyWeaponSkill(&indicators, players, turn, enemyPtrs, playerTarget, attackSelection);
+						turnTaken = true;
+						AttackManager::updateCooldowns(players[turn]);
+					}
+					break;
 			};
 		}
 
-		//Take Enemy Turn
+		//take enemy turn
 		if (!(turn < players.size())) {
 			for (int i = 0; i < enemies[turn - players.size()]->enemy.getDots().size(); i++) {
 				indicators.push_back(IndicatorInfo(true, ColorString("-" + to_string(enemies[turn - players.size()]->enemy.getDots()[i].dmg), ColorFlag::RED, 0, 10000, false), true, ColorString("", ColorFlag::GRAY, true)));
@@ -615,7 +617,7 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			turnTaken = true;
 		}
 
-		//Indicate
+		//indicate
 		for (int i = 0; i < indicators.size(); i++) {
 			if (indicators[i].displayIndicator && !OptionsManager::fastCombat) {
 				displayBattleState(&turn, &enemyTarget, &playerTarget, &attackSelection, players, enemies, &attackOptions);
@@ -623,7 +625,7 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			}
 		}
 
-		//Check for Deaths
+		//check for deaths
 		for (int i = 0; i < players.size(); i++) {
 			if (players[i]->getHealth() == 0) {
 				players.erase(players.begin() + i);
@@ -644,7 +646,7 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			result = 2;
 		}
 
-		//Update Turn
+		//update turn
 		if (turnTaken) {
 			turn++;
 			attackSelection = 0;
@@ -655,12 +657,12 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 
 	clCons::cls();
 
-	//Post-Battle
+	//post-battle
 	if (result == 2) { //PLAYERS WON
 
-		//Create Post-Battle Notifications
+		//create post-battle notifications
 		std::vector<std::string> pbn;
-		
+
 		pbn.push_back("");
 		for (int i = 0; i < players.size(); i++) {
 			for (int j = 0; j < deadEnemies.size(); j++) {
@@ -673,7 +675,7 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			}
 		}
 
-		//Exp Checks
+		//exp checks
 		int runningExp = 0;
 		for (int i = 0; i < deadEnemies.size(); i++) {
 			float eliteness = (float)deadEnemies[i]->enemy.getMaxHealth() / (float)CalcManager::getAverageEnemyHealth(deadEnemies[i]->enemy.getLevel());
@@ -688,14 +690,12 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 			}
 		}
 
-		//Weapon Level Checks
+		//weapon level checks
 		std::vector<std::string> wlcpbn = AttackManager::weaponLevelCheck(players);
-		for (int i = 0; i < wlcpbn.size(); i++) {
-			pbn.push_back(wlcpbn[i]);
-		}
+		for (int i = 0; i < wlcpbn.size(); i++) pbn.push_back(wlcpbn[i]);
 		pbn.push_back("");
 
-		//Display
+		//display
 		clCons::centerVer(pbn.size() + 3);
 		ColorManager::centerHorColor(ColorFlag::GREEN, true, "Victory!");
 		clCons::centerHor("", '-');
@@ -711,7 +711,7 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 		this->removeDeadEnemies();
 	} else if (result == 1) { //PLAYERS LOST
 		clCons::centerVer(5);
-		ColorManager::centerHorColor(ColorFlag::RED, true, "Failure!");	
+		ColorManager::centerHorColor(ColorFlag::RED, true, "Failure!");
 		clCons::centerHor("", '-', 2);
 		clCons::centerHor("You have died! You may reload to when you last saved.");
 		std::cout << std::endl << std::endl;;
@@ -720,152 +720,131 @@ bool GameEngine::battle(std::vector<Player*> players, std::vector<EnemyInfo*> en
 	}
 	return result - 1;
 }
-void GameEngine::displayBattleState(int* turn, int* enemyTarget, int* playerTarget, int* attackSelection, std::vector<Player*> players, std::vector<EnemyInfo*> enemies, std::vector<std::string>* attackOptions)
-{
-		//Variables
-		int sectionWidth = clCons::getConsoleWidth() / 3;
-		int middleWidth = clCons::getConsoleWidth() - (sectionWidth * 2);
-		std::vector<ColorString> leftDisplay;
-		std::vector<ColorString> rightDisplay;
+void GameEngine::displayBattleState(int* turn, int* enemyTarget, int* playerTarget, int* attackSelection, std::vector<Player*> players, std::vector<EnemyInfo*> enemies, std::vector<std::string>* attackOptions) {
+	
+	//variables
+	int sectionWidth = clCons::getConsoleWidth() / 3;
+	int middleWidth = clCons::getConsoleWidth() - (sectionWidth * 2);
+	std::vector<ColorString> leftDisplay;
+	std::vector<ColorString> rightDisplay;
 
-		//Display Top
-		clCons::clsNew();
-		std::cout << std::endl;
-		if (*turn >= players.size()) {
-			ColorManager::centerHorColor(ColorString("[" + enemies[*turn - players.size()]->enemy.getName() + "]'s turn", ColorFlag::RED, 1, enemies[*turn - players.size()]->enemy.getName().length() + 1));
-		} else {
-			ColorManager::centerHorColor(ColorString("[" + players[*turn]->getName() + "]'s turn", ColorFlag::BLUE, 1, players[*turn]->getName().length() + 1));
-		}
-		std::cout << std::endl << std::endl;
+	//display top
+	clCons::clsNew();
+	std::cout << std::endl;
+	if (*turn >= players.size()) {
+		ColorManager::centerHorColor(ColorString("[" + enemies[*turn - players.size()]->enemy.getName() + "]'s turn", ColorFlag::RED, 1, enemies[*turn - players.size()]->enemy.getName().length() + 1));
+	} else {
+		ColorManager::centerHorColor(ColorString("[" + players[*turn]->getName() + "]'s turn", ColorFlag::BLUE, 1, players[*turn]->getName().length() + 1));
+	}
+	std::cout << std::endl << std::endl;
 
-		//Set Left Display
-		for (int i = 0; i < players.size(); i++) {
-			//NAME
-			std::string prefix = "    ", suffix = "    ";
-			if (*enemyTarget == i) {
-				prefix = suffix = " ** ";
-			}
-			if (*turn == i) {
-				prefix = "-=[ ";
-				suffix = " ]=-";
-			}
-			std::string content = clCons::centerStringIn(sectionWidth, prefix + players[i]->getName() + suffix);
-			leftDisplay.push_back(ColorString(content, ColorFlag::BLUE, content.length() - players[i]->getName().length() -4, content.length() - 4, true));
-
-			//HEALTH BAR
-			leftDisplay.push_back(players[i]->createHealthBar(sectionWidth - 1));
-		}
-
-		//Set Right Display
-		for (int i = 0; i < enemies.size(); i++) {
-			//NAME
-			std::string prefix = "    ", suffix = "    ";
-			if (*playerTarget == i) {
-				prefix = suffix = " ** ";
-			}
-			if (*turn == i + players.size()) {
-				prefix = "-=[ ";
-				suffix = " ]=-";
-			}
-			std::string content = "";
-			std::string conditions = "";
-			if (enemies[i]->enemy.getStunned() > 0) 
-				conditions += " (St. " + to_string(enemies[i]->enemy.getStunned()) + ")";
-			for (int j = 0; j < enemies[i]->enemy.getDots().size(); j++) {	
-				conditions += " (Dot. " + to_string(enemies[i]->enemy.getDots()[j].length) + ")";
-			}
-			content = clCons::centerStringIn(sectionWidth, prefix + enemies[i]->enemy.getName() + conditions + suffix);
-			rightDisplay.push_back(ColorString(content, ColorFlag::RED, content.length() - (enemies[i]->enemy.getName().length() + conditions.length() + 4), content.length() - 4, true));
-
-			//HEALTH BAR
-			rightDisplay.push_back(enemies[i]->enemy.createHealthBar(sectionWidth - 1));
-		}
-
-		//Display Right & Left
-		for (int i = 0; i < rightDisplay.size() || i < leftDisplay.size(); i++) {
-			//LEFT
-			if (i < leftDisplay.size()) {
-				ColorManager::csout(leftDisplay[i]);
-				for (int j = 0; j < sectionWidth - leftDisplay[i].length(); j++) {
-					std::cout << " ";
-				}
-			} else {
-				for (int j = 0; j < sectionWidth; j++) {
-					std::cout << " ";
-				}
-			}
-
-			//MIDDLE
-			for (int j = 0; j < middleWidth; j++) {
-				std::cout << " ";
-			}
-
-			//RIGHT
-			if (i < rightDisplay.size()) {
-				ColorManager::csout(rightDisplay[i]);
-				for (int j = 0; j < sectionWidth - rightDisplay[i].length(); j++) {
-					std::cout << " ";
-				}
-			} else {
-				for (int j = 0; j < sectionWidth; j++) {
-					std::cout << " ";
-				}
-			}
-		}
-
-		//Pre-Middle/Bottom Display		
-		int middleHeight = 0;
-		int bottomLines = 0;
-		if (*turn < players.size()) {
-			*attackOptions = AttackManager::getWeaponSkillsList(players[*turn]);
-			bottomLines = attackOptions->size() + 2;
-		}
-		if (leftDisplay.size() > rightDisplay.size()) {
-			middleHeight = clCons::getConsoleHeight() - (4 + leftDisplay.size()) - bottomLines;
-		} else {
-			middleHeight = clCons::getConsoleHeight() - (4 + rightDisplay.size()) - bottomLines;
-		}
-
-		//Display Middle
-		for (int i = 0; i < middleHeight; i++) {
-			std::cout << std::endl;
-		}
-
-		//Display Bottom (PLAYER TURN)
-		if (*turn < players.size()) {
-			ColorManager::csout(ColorString("Choose an attack option:", ColorFlag::GRAY, 0, 10000, true));
-			std::cout << std::endl;
-			for (int i = 0; i < attackOptions->size(); i++) {
-				std::string attackPrefix = "    ", attackSuffix = "    ";
-				if (*attackSelection == i) {
-					attackPrefix = "  -[";
-					attackSuffix = "]-  ";
-				}
-				std::cout << attackPrefix << (*attackOptions)[i] << attackSuffix << std::endl;
-			}
-			std::cout << std::endl;
-			clCons::centerHor("[Enter - Attack]-[W/S - Change Attack Option]-[Arrow Keys - Change Target Enemy]", '-');
-		} 
-}
-void GameEngine::setEnemyTarget(std::vector<Player*> players, int* enemyTarget)
-{
+	//set left display
 	for (int i = 0; i < players.size(); i++) {
-		if (OptionsManager::difficulty == 0) {				
-			if (players[i]->getHealth() > players[*enemyTarget]->getHealth()) {
-				*enemyTarget = i;
-			}
+		
+		//name
+		std::string prefix = "    ", suffix = "    ";
+		if (*enemyTarget == i) prefix = suffix = " ** ";
+		if (*turn == i) {
+			prefix = "-=[ ";
+			suffix = " ]=-";
+		}
+		std::string content = clCons::centerStringIn(sectionWidth, prefix + players[i]->getName() + suffix);
+		leftDisplay.push_back(ColorString(content, ColorFlag::BLUE, content.length() - players[i]->getName().length() - 4, content.length() - 4, true));
+
+		//health bar
+		leftDisplay.push_back(players[i]->createHealthBar(sectionWidth - 1));
+	}
+
+	//set right display
+	for (int i = 0; i < enemies.size(); i++) {
+		
+		//name
+		std::string prefix = "    ", suffix = "    ";
+		if (*playerTarget == i) prefix = suffix = " ** ";
+		if (*turn == i + players.size()) {
+			prefix = "-=[ ";
+			suffix = " ]=-";
+		}
+		std::string content = "";
+		std::string conditions = "";
+		if (enemies[i]->enemy.getStunned() > 0)
+			conditions += " (St. " + to_string(enemies[i]->enemy.getStunned()) + ")";
+		for (int j = 0; j < enemies[i]->enemy.getDots().size(); j++) {
+			conditions += " (Dot. " + to_string(enemies[i]->enemy.getDots()[j].length) + ")";
+		}
+		content = clCons::centerStringIn(sectionWidth, prefix + enemies[i]->enemy.getName() + conditions + suffix);
+		rightDisplay.push_back(ColorString(content, ColorFlag::RED, content.length() - (enemies[i]->enemy.getName().length() + conditions.length() + 4), content.length() - 4, true));
+
+		//health bar
+		rightDisplay.push_back(enemies[i]->enemy.createHealthBar(sectionWidth - 1));
+	}
+
+	//display right and left
+	for (int i = 0; i < rightDisplay.size() || i < leftDisplay.size(); i++) {
+		
+		//left
+		if (i < leftDisplay.size()) {
+			ColorManager::csout(leftDisplay[i]);
+			for (int j = 0; j < sectionWidth - leftDisplay[i].length(); j++) std::cout << " ";
 		} else {
-			if (players[i]->getHealth() < players[*enemyTarget]->getHealth()) {
-				*enemyTarget = i;
+			for (int j = 0; j < sectionWidth; j++) std::cout << " ";
+		}
+
+		//middle
+		for (int j = 0; j < middleWidth; j++) std::cout << " ";
+
+		//right
+		if (i < rightDisplay.size()) {
+			ColorManager::csout(rightDisplay[i]);
+			for (int j = 0; j < sectionWidth - rightDisplay[i].length(); j++) std::cout << " ";
+		} else {
+			for (int j = 0; j < sectionWidth; j++) std::cout << " ";
+		}
+	}
+
+	//pre-middle/bottom display		
+	int middleHeight = 0;
+	int bottomLines = 0;
+	if (*turn < players.size()) {
+		*attackOptions = AttackManager::getWeaponSkillsList(players[*turn]);
+		bottomLines = attackOptions->size() + 2;
+	}
+	if (leftDisplay.size() > rightDisplay.size()) middleHeight = clCons::getConsoleHeight() - (4 + leftDisplay.size()) - bottomLines;
+	else middleHeight = clCons::getConsoleHeight() - (4 + rightDisplay.size()) - bottomLines;
+
+	//display middle
+	for (int i = 0; i < middleHeight; i++) std::cout << std::endl;
+
+	//display bottom (PLAYER TURN)
+	if (*turn < players.size()) {
+		ColorManager::csout(ColorString("Choose an attack option:", ColorFlag::GRAY, 0, 10000, true));
+		std::cout << std::endl;
+		for (int i = 0; i < attackOptions->size(); i++) {
+			std::string attackPrefix = "    ", attackSuffix = "    ";
+			if (*attackSelection == i) {
+				attackPrefix = "  -[";
+				attackSuffix = "]-  ";
 			}
+			std::cout << attackPrefix << (*attackOptions)[i] << attackSuffix << std::endl;
+		}
+		std::cout << std::endl;
+		clCons::centerHor("[Enter - Attack]-[W/S - Change Attack Option]-[Arrow Keys - Change Target Enemy]", '-');
+	}
+}
+void GameEngine::setEnemyTarget(std::vector<Player*> players, int* enemyTarget) {
+	for (int i = 0; i < players.size(); i++) {
+		if (OptionsManager::difficulty == 0) {
+			if (players[i]->getHealth() > players[*enemyTarget]->getHealth()) *enemyTarget = i;
+		} else {
+			if (players[i]->getHealth() < players[*enemyTarget]->getHealth()) *enemyTarget = i;
 		}
 	}
 }
 
-//Miscellaneous
-void GameEngine::display(bool displayExtras)
-{
-	//Do normal display
+//Miscellaneous Functions
+void GameEngine::display(bool displayExtras) {
+
+	//do normal display
 	if (!this->_isOver) {
 		this->_currentMap.displayMap(true, &this->_gameEnemies);
 
@@ -880,9 +859,9 @@ void GameEngine::display(bool displayExtras)
 		}
 	}
 }
-void GameEngine::handleCollision(Collision collision, bool* turnSpent)
-{
-	//Gate Collisions
+void GameEngine::handleCollision(Collision collision, bool* turnSpent) {
+	
+	//gate collisions
 	bool specialCollide = false;
 	std::vector<Gate> gateTiles = this->_currentMap.getGates();
 	for (int i = 0; i < gateTiles.size(); i++) {
@@ -894,33 +873,29 @@ void GameEngine::handleCollision(Collision collision, bool* turnSpent)
 		}
 	}
 
-	//Enemy Collisions
+	//enemy collisions
 	for (int i = 0; i < this->_gameEnemies.size(); i++) {
 		if (collision.tileLocation.x == this->_gameEnemies[i].enemy.getX() && collision.tileLocation.y == this->_gameEnemies[i].enemy.getY() && this->_currentMap.getName() == this->_gameEnemies[i].map) {
 			specialCollide = true;
 			std::vector<Player*> playerParticipants;
 			std::vector<EnemyInfo*> enemyParticipants;
 			getBattleParticipants(collision.tileLocation.x, collision.tileLocation.y, &playerParticipants, &enemyParticipants, false);
-			if (!battle(playerParticipants, enemyParticipants)) 
+			if (!battle(playerParticipants, enemyParticipants))
 				this->_isOver = true;
 			*turnSpent = true;
 			clCons::cls();
 		}
 	}
 
-	//Wall Collisions
-	if (collision.collidedTile != ' ' && collision.movesMade == 0 && !specialCollide) {
-		*turnSpent = false;
-	} 
-	
+	//wall collisions
+	if (collision.collidedTile != ' ' && collision.movesMade == 0 && !specialCollide) *turnSpent = false;
+
 	//Air Collisions
-	else {
-		*turnSpent = true;
-	}
+	else *turnSpent = true;
 }
-void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coord> locations)
-{
-	//Exit Event
+void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coordinate> locations) {
+	
+	//exit event
 	std::vector <Player*> players;
 	for (int i = 0; i < this->_gamePlayers.size(); i++) {
 		players.push_back(&this->_gamePlayers[i]);
@@ -932,13 +907,13 @@ void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coord> locat
 		}
 	}
 
-	//Variables
+	//variables
 	bool archiveMap = false;
-	
-	//Save current map for later usage
+
+	//save current map for later usage
 	this->_archiveMaps.push_back(this->_currentMap);
 
-	//Check if map is in archives
+	//check if map is in archives
 	for (int i = 0; i < this->_archiveMaps.size(); i++) {
 		if (mapFileSource == this->_archiveMaps[i].getFileSource()) {
 			archiveMap = true;
@@ -950,19 +925,19 @@ void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coord> locat
 	}
 
 	if (!archiveMap) {
-		//Load new map
+
+		//load new map
 		this->_currentMap = Map(mapFileSource, this->_storyInfo.name);
 
-		//Set player positions
+		//set player positions
 		this->_currentMap.setStartingPositions(locations);
 		this->_currentMap.setPlayerStartingPositions(&this->_gamePlayers);
 
-		//Load Enemies
+		//load enemies
 		bool loadMoreEnemies = true;
 		for (int i = 0; i < this->_gameEnemies.size(); i++) {
-			if (this->_gameEnemies[i].map == this->_currentMap.getName()) {
-				loadMoreEnemies = false;
-			}
+			if (this->_gameEnemies[i].map == this->_currentMap.getName()) loadMoreEnemies = false;
+
 		}
 		if (loadMoreEnemies) {
 			float averageLevel = 0;
@@ -974,12 +949,10 @@ void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coord> locat
 			for (int i = 0; i < nextEnemies.size(); i++) {
 				this->_gameEnemies.push_back(nextEnemies[i]);
 			}
-		} else {
-			this->_currentMap.removeDefaultEnemyTiles();
-		}
+		} else this->_currentMap.removeDefaultEnemyTiles();
 	}
 
-	//Entrance Event
+	//entrance event
 	if (this->_currentMap.getEntranceEventCode() != -1) {
 		if (!this->isPastEvent(this->_currentMap.getEntranceEventCode()) || (JournalManager::getEvent(this->_currentMap.getEntranceEventCode())->recurring == true)) {
 			JournalManager::enactEvent(this->_currentMap.getEntranceEventCode(), players);
@@ -987,15 +960,15 @@ void GameEngine::travelToMap(std::string mapFileSource, std::vector<Coord> locat
 		}
 	}
 
-	//Update Gate Positions
+	//update gate positions
 	this->_gateLocs = this->_currentMap.getGatePositions();
 
-	//Clear Screen
+	//clear screen
 	clCons::cls();
 }
-void GameEngine::getBattleParticipants(int x, int y, std::vector<Player*>* players, std::vector<EnemyInfo*>* enemies, bool enemyAttacked)
-{
-	//Get all players
+void GameEngine::getBattleParticipants(int x, int y, std::vector<Player*>* players, std::vector<EnemyInfo*>* enemies, bool enemyAttacked) {
+	
+	//get all players
 	for (int i = 0; i < this->_gamePlayers.size(); i++) {
 		if (this->_gamePlayers[i].getX() >= x - 1 && this->_gamePlayers[i].getX() <= x + 1) {
 			if (this->_gamePlayers[i].getY() >= y - 1 && this->_gamePlayers[i].getY() <= y + 1) {
@@ -1004,7 +977,7 @@ void GameEngine::getBattleParticipants(int x, int y, std::vector<Player*>* playe
 		}
 	}
 
-	//Get all enemies
+	//get all enemies
 	for (int i = 0; i < this->_gameEnemies.size(); i++) {
 		if (this->_gameEnemies[i].map == this->_currentMap.getName()) {
 			if (this->_gameEnemies[i].enemy.getX() >= x - 1 && this->_gameEnemies[i].enemy.getX() <= x + 1) {
@@ -1015,8 +988,7 @@ void GameEngine::getBattleParticipants(int x, int y, std::vector<Player*>* playe
 		}
 	}
 }
-bool GameEngine::isPastEvent(int eventCode)
-{
+bool GameEngine::isPastEvent(int eventCode) {
 	this->_pastEvents;
 	for (int i = 0; i < this->_pastEvents.size(); i++) {
 		if (this->_pastEvents[i] == eventCode) {
@@ -1025,8 +997,7 @@ bool GameEngine::isPastEvent(int eventCode)
 	}
 	return false;
 }
-std::vector<int> GameEngine::getJournalCodes()
-{
+std::vector<int> GameEngine::getJournalCodes() {
 	std::vector<int> eventCodes;
 	for (int i = 0; i < this->_pastEvents.size(); i++) {
 		if (JournalManager::getEvent(this->_pastEvents[i])->journalEntry) {

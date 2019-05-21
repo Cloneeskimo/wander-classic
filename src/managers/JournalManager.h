@@ -1,20 +1,24 @@
-#pragma once
+
+#ifndef JournalManager_h
+#define JournalManager_h
+
+//Includes
 #include <string>
 #include <vector>
 #include <thread>
 #include <chrono>
-#include "clfram.h"
-#include "item.h"
-#include "optionsManager.h"
-#include "calcManager.h"
-#include "player.h"
+#include <Clfram.h>
+#include <Item.h>
+#include <managers/OptionsManager.h>
+#include <managers/CalcManager.h>
+#include <entity/Player.h>
 
-struct Event
-{
-	//Cosntructor
-	Event() {};
-	Event(std::string name, std::vector<std::string> story, std::vector<std::string> itemInfo, int eventCode, bool equipItems = false, bool recurring = false, bool journalEntry = true)
-	{
+//Event Struct
+struct Event {
+
+	//Cosntructors
+	Event() {}; //default
+	Event(std::string name, std::vector<std::string> story, std::vector<std::string> itemInfo, int eventCode, bool equipItems = false, bool recurring = false, bool journalEntry = true) { //full
 		this->name = name;
 		this->story = story;
 		this->itemInfo = itemInfo;
@@ -24,7 +28,7 @@ struct Event
 		this->journalEntry = journalEntry;
 	}
 
-	//Variables
+	//Data
 	std::string name = "unnamed event";
 	std::vector<std::string> story;
 	std::vector<std::string> itemInfo;
@@ -34,19 +38,21 @@ struct Event
 	int eventCode = -1;
 };
 
-static class JournalManager
-{
+//JournalManager Class
+static class JournalManager {
 public:
-	
+
 	//Functions
 	static void loadEvents(std::string storyFolder);
 	static void displayCinematically(std::vector<std::string> displayThis);
-	static void enactEvent(int code, std::vector<Player*> players);
+	static void enactEvent(int code, std::vector<Player*> player);
 	static void openJournal(std::vector<int> eventCodes);
 	static Event* getEvent(int code);
 
 private:
 
-	//Variables
+	//Data
 	static std::vector<Event> _events;
 };
+
+#endif

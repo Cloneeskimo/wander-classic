@@ -1,16 +1,19 @@
-#pragma once
-#include <string>
-#include "clfram.h"
-#include "colorManager.h"
 
-//Structs
-struct Coord
-{
+#ifndef OptionsManager_h
+#define OptionsManager_h
+
+//Includes
+#include <string>
+#include <Clfram.h>
+#include <managers/ColorManager.h>
+
+//Coordinate Struct
+struct Coordinate {
 	int x, y;
 };
 
-static class OptionsManager
-{
+//OptionsManager Class
+static class OptionsManager {
 public:
 
 	//Functions
@@ -22,7 +25,7 @@ public:
 	static std::string getColorOption();
 	static std::string getDifficultyOption();
 
-	//Variables
+	//Data
 	static bool backgroundWhite;
 	static bool fastText;
 	static bool fastMovement;
@@ -33,3 +36,5 @@ public:
 	static int loadingProg;
 	static int loadingMax;
 };
+
+#endif

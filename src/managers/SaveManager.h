@@ -1,23 +1,27 @@
-#pragma once
+
+#ifndef SaveManager_h
+#define SaveManager_h
+
+//Includes
 #include <string>
 #include <vector>
 #include <fstream>
 #include <stdio.h>
 #include <chrono>
 #include <thread>
-#include "clfram.h"
-#include "player.h"
-#include "entity.h"
-#include "map.h"
-#include "item.h"
-#include "colorManager.h"
-#include "storyManager.h"
-#include "journalManager.h"
-#include "attackManager.h"
+#include <Clfram.h>
+#include <Map.h>
+#include <Node.h>
+#include <Item.h>
+#include <entity/Player.h>
+#include <entity/Entity.h>
+#include <managers/ColorManager.h>
+#include <managers/StoryManager.h>
+#include <managers/JournalManager.h>
+#include <managers/AttackManager.h>
 
-//Structs
-struct SaveInfo
-{
+//SaveInfo Struct
+struct SaveInfo {
 	StoryInfo storyInfo;
 	Map currentMap;
 	std::vector<EnemyInfo> currentEnemies;
@@ -26,10 +30,11 @@ struct SaveInfo
 	std::string saveName;
 };
 
-static class SaveManager
-{
+//SaveManager Class
+static class SaveManager {
 public:
-	//Menus
+
+	//Menu Functions
 	static SaveInfo loadGame(bool *returned);
 	static SaveInfo newGame(bool *returned);
 
@@ -39,8 +44,10 @@ public:
 	static std::vector<std::string> getListOfSaves();
 
 private:
-	
+
 	//Private Save Functions
 	static SaveInfo loadSave(std::string saveName);
 	static void updateSavesFile(std::vector<std::string> newSavesList);
 };
+
+#endif

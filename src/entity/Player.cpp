@@ -1,9 +1,9 @@
-#include "player.h"
+#include "Player.h"
 
-//Constructor
-void Player::constructPlayerExtras(int level, int gold, int health, int exp, std::vector<Level> levels, std::vector<Item> inventory, std::vector<Item> equipment)
-{
-	//Construct Player Extras
+//Constructors
+void Player::constructPlayerExtras(int level, int gold, int health, int exp, std::vector<Level> levels, std::vector<Item> inventory, std::vector<Item> equipment) {
+
+	//construct player extras
 	this->_level = level;
 	this->_gold = gold;
 	this->_health = health;
@@ -12,30 +12,111 @@ void Player::constructPlayerExtras(int level, int gold, int health, int exp, std
 	this->_inventory = inventory;
 	this->_equipment = equipment;
 
-	//Check Health
+	//check health
 	if (this->_health < 0) {
 		this->_health = this->getMaxHealth();
 	}
 }
-void Player::constructPlayerAttributes(int attributePoints, int endurance, int spirit, int capability)
-{
+void Player::constructPlayerAttributes(int attributePoints, int endurance, int spirit, int capability) {
 	this->_attributePoints = attributePoints;
 	this->_endurance = endurance;
 	this->_spirit = spirit;
 	this->_capability = capability;
 }
 
-//Getters
-Item* Player::getWeapon()
-{
+//Node Conversion Functions 
+Node Player::convertToNode() {
+
+	//basic player info
+	Node n("player", "player");
+	n.addChild(Node("name", this->getName()));
+	n.addChild(Node("speed", this->getSpeed()));
+	n.addChild(Node("x", this->getX()));
+	n.addChild(Node("y", this->getY()));
+	n.addChild(Node("symbol", this->getSymbol()));
+	n.addChild(Node("level", this->_level));
+	n.addChild(Node("gold", this->_gold));
+	n.addChild(Node("health", this->_health));
+	n.addChild(Node("attribute points", this->_attributePoints));
+	n.addChild(Node("endurance", this->_endurance));
+	n.addChild(Node("spirit", this->_spirit));
+	n.addChild(Node("capability", this->_capability));
+	n.addChild(Node("exp", this->_exp));
+
+	//inventory
+	Node inventory("inventory", "inventory");
+	for (Item item : this->_inventory) inventory.addChild(item.convertToNode());
+	n.addChild(inventory);
+
+	//equipment
+	Node equipment("equipment", "equipment");
+	for (Item item : this->_equipment) equipment.addChild(item.convertToNode());
+	n.addChild(equipment);
+
+	//weapon levels
+	Node weaponLevels("weapon levels", "weapon levels");
+	for (WeaponLevel weaponLevel : this->_weaponLevels) weaponLevels.addChild(weaponLevel.convertToNode());
+	n.addChild(weaponLevels);
+
+	//return node
+	return n;
+}
+Player Player::createPlayerFromNode(Node* node, std::vector<Level> levels) {
+
+	//create player
+	Player player(EntityType::PLAYER,
+		node->getChildByName("name")->getValue(),
+		node->getChildByName("symbol")->getValue()[0],
+		node->getChildByName("x")->getValueAsInt(),
+		node->getChildByName("y")->getValueAsInt(),
+		node->getChildByName("speed")->getValueAsInt());
+
+	//inventory
+	std::vector<Item> inventory;
+	for (Node item : *(node->getChildByName("inventory")->getChildren())) {
+		inventory.push_back(Item::createItemFromNode(&item));
+	}
+
+	//equipment
+	std::vector<Item> equipment;
+	for (Node item : *(node->getChildByName("equipment")->getChildren())) {
+		equipment.push_back(Item::createItemFromNode(&item));
+	}
+
+	//construct player extras
+	player.constructPlayerExtras(node->getChildByName("level")->getValueAsInt(),
+		node->getChildByName("gold")->getValueAsInt(),
+		node->getChildByName("health")->getValueAsInt(),
+		node->getChildByName("exp")->getValueAsInt(),
+		levels, inventory, equipment);
+
+	//weapon levels
+	std::vector<WeaponLevel> weaponLevels;
+	for (Node weaponLevel : *(node->getChildByName("weapon levels")->getChildren())) {
+		weaponLevels.push_back(WeaponLevel::createWeaponLevelFromNode(&weaponLevel));
+	}
+	player.setWeaponLevels(weaponLevels);
+
+	//construct player attributes
+	player.constructPlayerAttributes(node->getChildByName("attribute points")->getValueAsInt(),
+		node->getChildByName("endurance")->getValueAsInt(),
+		node->getChildByName("spirit")->getValueAsInt(),
+		node->getChildByName("capability")->getValueAsInt());
+
+	//return player
+	return player;
+}
+
+//Accessors
+Item* Player::getWeapon() {
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getSubType() > ItemSubType(SUBTYPEWEAPONAFTER)) {
 			return &this->_equipment[i];
 		}
 	}
 }
-int Player::getWeaponLevel(ItemSubType thisWeapon)
-{
+//RETURNS - -1 if invalid
+int Player::getWeaponLevel(ItemSubType thisWeapon) {
 	for (int i = 0; i < this->_weaponLevels.size(); i++) {
 		if (thisWeapon == this->_weaponLevels[i].weapon) {
 			return this->_weaponLevels[i].level;
@@ -43,38 +124,36 @@ int Player::getWeaponLevel(ItemSubType thisWeapon)
 	}
 	return -1;
 }
-int Player::getMaxHealth()
-{
-	//Get Base Health
+int Player::getMaxHealth() {
+
+	//get base health
 	int health = CalcManager::getBaseHealth(this->_level);
 
-	//Calculate Effective Armor/Endurance
+	//calculate effective armor/endurance
 	float effectiveArmor = this->getEffectiveArmor();
 	float effectiveEndurance = this->getEffectiveEndurance();
 
-	//Factor in Effective Armor/Endurance
+	//factor in effective armor/endurance
 	health += (float)(effectiveArmor * effectiveEndurance) + 0.5f;
 
-	//Return Health
+	//return health
 	return health;
 }
-float Player::getWeaponProficiency()
-{
+float Player::getWeaponProficiency() {
 	return 1.0f + ((((float)this->getWeaponLevel(this->getWeapon()->getSubType())) - 1) / (float)100);
 }
 
 //Totaling Functions
-int Player::getTotalItems()
-{
-	//Calculate and return total item count
+int Player::getTotalItems() {
+
+	//calculate and return total item count
 	int totalItems = 0;
 	for (int i = 0; i < this->_inventory.size(); i++) {
 		totalItems += this->_inventory[i].getQuantity();
 	}
 	return totalItems;
 }
-int Player::getTotalArmor()
-{
+int Player::getTotalArmor() {
 	int totalArmor = 0;
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getType() != ItemType::WEAPON) {
@@ -83,12 +162,10 @@ int Player::getTotalArmor()
 	}
 	return totalArmor;
 }
-int Player::getRegeneration()
-{
-	return (float)this->_level * ((float)((this->_spirit * 2) + 100)/ 100);
+int Player::getRegeneration() {
+	return (float)this->_level * ((float)((this->_spirit * 2) + 100) / 100);
 }
-float Player::getTotalDamage(bool withCapability, bool withProficiency)
-{
+float Player::getTotalDamage(bool withCapability, bool withProficiency) {
 	int dmg = 0;
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getType() == ItemType::WEAPON) {
@@ -103,8 +180,7 @@ float Player::getTotalDamage(bool withCapability, bool withProficiency)
 	}
 	return dmg;
 }
-int Player::getInventoryValue()
-{
+int Player::getInventoryValue() {
 	int totalValue = 0;
 	for (int i = 0; i < this->_inventory.size(); i++) {
 		totalValue += (this->_inventory[i].getValue() * this->_inventory[i].getQuantity());
@@ -112,34 +188,31 @@ int Player::getInventoryValue()
 	return totalValue;
 }
 
-//Setters
-void Player::addItemToInventory(Item thisItem)
-{
+//Mutators
+void Player::addItemToInventory(Item thisItem) {
 	bool existsAlready = false;
 	for (int i = 0; i < this->_inventory.size(); i++) {
 		if (thisItem == this->_inventory[i]) {
 			this->_inventory[i].add(thisItem.getQuantity());
 			existsAlready = true;
-			if (this->_inventory[i].getQuantity() > MAX_STACK_SIZE) {
+			while (this->_inventory[i].getQuantity() > MAX_STACK_SIZE) {
 				thisItem.setQuantity(this->_inventory[i].getQuantity() - MAX_STACK_SIZE);
 				this->_inventory[i].setQuantity(99);
 				this->_inventory.push_back(thisItem);
 			}
 		}
 	}
-	if (!existsAlready) 
+	if (!existsAlready)
 		this->_inventory.push_back(thisItem);
 }
-void Player::addWeaponLevel(ItemSubType thisType)
-{
+void Player::addWeaponLevel(ItemSubType thisType) {
 	for (int i = 0; i < this->_weaponLevels.size(); i++) {
 		if (this->_weaponLevels[i].weapon == thisType) {
 			this->_weaponLevels[i].level++;
 		}
 	}
 }
-void Player::addAttribute(int choice)
-{
+void Player::addAttribute(int choice) {
 	if (this->_attributePoints > 0) {
 		if (choice == 0)
 			this->_endurance++;
@@ -154,18 +227,17 @@ void Player::addAttribute(int choice)
 		clCons::paus("");
 	}
 }
-void Player::heal(int thisMuch)
-{
+void Player::heal(int thisMuch) {
 	this->_health += thisMuch;
 	if (this->_health > this->getMaxHealth()) {
 		this->_health = this->getMaxHealth();
 	}
 }
 
-//Functions
-void Player::passiveUpdate()
-{
-	//Regenerate Health
+//Other Functions
+void Player::passiveUpdate() {
+
+	//regenerate health
 	if (this->_health != this->getMaxHealth()) {
 		this->_health += this->getRegeneration();
 		if (this->_health > this->getMaxHealth()) {
@@ -173,9 +245,9 @@ void Player::passiveUpdate()
 		}
 	}
 }
-void Player::openInventory()
-{
-	//If Inventory Is Empty
+void Player::openInventory() {
+
+	//if inventory is empty
 	if (this->_inventory.size() == 0) {
 		clCons::cls();
 		clCons::centerVerhor(1, "Your inventory is empty!");
@@ -183,21 +255,21 @@ void Player::openInventory()
 		return;
 	}
 
-	//Grab Screen Properties
+	//grab screen properties
 	int screenWidth = clCons::getConsoleWidth();
 	int screenHeight = clCons::getConsoleHeight();
 
-	//Extra Variables
+	//extra variables
 	int input = 0;
 	int selection = 0;
 
-	//Dual Display Vectors
+	//dual display vectors
 	std::vector<std::string> leftDisplay;
 	std::vector<ColorString> rightDisplay;
 	ColorString blankString;
 	blankString.content = "";
 
-	//Display Variables
+	//display variables
 	int leftDisplayWidth = 10;
 	int LEFT_DISPLAY_EXTRAS = 12;
 	int rightDisplayWidth;
@@ -205,7 +277,7 @@ void Player::openInventory()
 	int displayHeight = 10;
 	int DISPLAY_HEIGHT_EXTRAS = 4;
 
-	//Determine Left Display Width
+	//determine left display width
 	for (int i = 0; i < this->_inventory.size(); i++) {
 		int nextLength = this->_inventory[i].getName().length();
 		if (nextLength > (leftDisplayWidth - LEFT_DISPLAY_EXTRAS)) {
@@ -213,20 +285,20 @@ void Player::openInventory()
 		}
 	}
 
-	//Inventory Display Settings
+	//inventory display settings
 	int bottomMargin = 0;
 
-	//Inventory Stats
+	//inventory stats
 	int totalItems = getTotalItems();
 	int totalValue = getInventoryValue();
 
-	//Pre-Loop
+	//pre-loop
 	clCons::cls();
 
-	//Loop
+	//loop
 	while (!(input == 27 || input == 'b' || input == 'B')) {
-		
-		//Determine Left Display Width
+
+		//determine left display width
 		for (int i = 0; i < this->_inventory.size(); i++) {
 			int nextLength = this->_inventory[i].getName().length();
 			if (nextLength > (leftDisplayWidth - LEFT_DISPLAY_EXTRAS)) {
@@ -234,32 +306,26 @@ void Player::openInventory()
 			}
 		}
 
-		//Determine Adaptable Display Variables
+		//determine adaptable display variables
 		screenWidth = clCons::getConsoleWidth();
 		int oldScreenHeight = screenHeight;
 		screenHeight = clCons::getConsoleHeight();
-		if (oldScreenHeight != screenHeight)
-			clCons::cls();
+		if (oldScreenHeight != screenHeight) clCons::cls();
 		rightDisplayWidth = screenWidth - leftDisplayWidth - COMPLETE_DISPLAY_EXTRAS;
 		displayHeight = 12;
-		if (screenHeight < displayHeight + DISPLAY_HEIGHT_EXTRAS) {
-			displayHeight = screenHeight - DISPLAY_HEIGHT_EXTRAS;
-		} else {
-			displayHeight = 12;
-		}
-		
-		//Check Selection
-		if (selection >= bottomMargin + displayHeight) {
-			selection = bottomMargin + displayHeight - 1;
-		}
+		if (screenHeight < displayHeight + DISPLAY_HEIGHT_EXTRAS) displayHeight = screenHeight - DISPLAY_HEIGHT_EXTRAS;
+		else displayHeight = 12;
 
-		//Set Left Display------------------------------------------------------------------------------------
+		//check selection
+		if (selection >= bottomMargin + displayHeight) selection = bottomMargin + displayHeight - 1;
+
+		//set left display
 		leftDisplay = std::vector<std::string>();
 		std::string nextLine = "";
- 		for (int i = bottomMargin; i < this->_inventory.size(); i++) {	
+		for (int i = bottomMargin; i < this->_inventory.size(); i++) {
 			nextLine = "";
 			if (i + 1 <= 9) {
-				nextLine  += to_string(i + 1) + " ";
+				nextLine += to_string(i + 1) + " ";
 			} else {
 				nextLine += to_string(i + 1);
 			}
@@ -280,20 +346,20 @@ void Player::openInventory()
 			leftDisplay.push_back(nextLine);
 		}
 
-		//Set Right Display-----------------------------------------------------------------------------------
+		//set right display
 		rightDisplay = std::vector<ColorString>();
-		ColorString toDisplay;	
+		ColorString toDisplay;
 		for (int i = 0; i < displayHeight / 4; i++) {
 			rightDisplay.push_back(blankString);
-		}	
+		}
 
-		//Item Name
+		//item name
 		toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "-=[ " + this->_inventory[selection].getName() + " ]=-"), ColorFlag::GREEN, true, 1, clUtil::wordCount(clCons::centerStringIn(rightDisplayWidth, "-=[ " + this->_inventory[selection].getName() + " ]=-")) - 2, true);
 		rightDisplay.push_back(toDisplay);
 		rightDisplay.push_back(blankString);
 
-		//WEAPON
-		if (this->_inventory[selection].getType() == WEAPON) { 
+		//weapon display
+		if (this->_inventory[selection].getType() == WEAPON) {
 
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "Type: " + convertItemSubType(this->_inventory[selection].getSubType())), ColorFlag::GRAY, true);
 			rightDisplay.push_back(toDisplay);
@@ -325,9 +391,9 @@ void Player::openInventory()
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "Value: " + to_string(this->_inventory[selection].getValue()) + "g"), ColorFlag::YELLOW, true, 1);
 			rightDisplay.push_back(toDisplay);
 
-		//ARMOR
+			//armor display
 		} else if (this->_inventory[selection].getType() == ARMOR) {
-			
+
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "Type: " + convertItemSubType(this->_inventory[selection].getSubType())), ColorFlag::GRAY, true);
 			toDisplay.configureWordTypeDisplay(5000);
 			rightDisplay.push_back(toDisplay);
@@ -359,7 +425,7 @@ void Player::openInventory()
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "Value: " + to_string(this->_inventory[selection].getValue()) + "g"), ColorFlag::YELLOW, true, 1);
 			rightDisplay.push_back(toDisplay);
 
-		//OTHER
+			//other item type display
 		} else {
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "Type: " + convertItemType(this->_inventory[selection].getType())), ColorFlag::GRAY, true, 1);
 			rightDisplay.push_back(toDisplay);
@@ -367,10 +433,10 @@ void Player::openInventory()
 			rightDisplay.push_back(toDisplay);
 		}
 
-		//Pre-Display-----------------------------------------------------------------------------------------
+		//pre-display
 		clCons::centerVerhor(displayHeight + DISPLAY_HEIGHT_EXTRAS, this->getName() + "'s Inventory", ' ', 2);
 
-		//Display Top
+		//display top
 		std::string topMessage = "";
 		while (topMessage.length() < screenWidth) {
 			if (topMessage.length() == 0 || topMessage.length() == screenWidth - 1 || topMessage.length() == leftDisplayWidth + 1) {
@@ -383,9 +449,10 @@ void Player::openInventory()
 		}
 		std::cout << topMessage;
 
-		//Display Middle
+		//display middle
 		for (int i = 0; i < displayHeight; i++) {
-			//Display Left
+
+			//display left
 			std::cout << "|";
 			if (leftDisplay.size() > i) {
 				std::cout << leftDisplay[i];
@@ -397,8 +464,8 @@ void Player::openInventory()
 					std::cout << " ";
 				}
 			}
-			
-			//Display Right
+
+			//display right
 			std::cout << "|";
 			if (rightDisplay.size() > i) {
 				if (rightDisplay[i].content != "") {
@@ -407,19 +474,19 @@ void Player::openInventory()
 						std::cout << " ";
 					}
 				} else {
-				for (int j = 0; j < rightDisplayWidth; j++) {
-					std::cout << " ";
+					for (int j = 0; j < rightDisplayWidth; j++) {
+						std::cout << " ";
+					}
 				}
-			}	
 			} else {
 				for (int j = 0; j < rightDisplayWidth; j++) {
 					std::cout << " ";
 				}
-			}		
+			}
 			std::cout << "|";
 		}
 
-		//Display Bottom
+		//display bottom
 		std::string bottomMessage = "";
 		while (bottomMessage.length() < screenWidth) {
 			if (bottomMessage.length() == 0 || bottomMessage.length() == screenWidth - 1 || bottomMessage.length() == leftDisplayWidth + 1) {
@@ -432,43 +499,43 @@ void Player::openInventory()
 		}
 		std::cout << bottomMessage;
 
-		//Gather Input
+		//gather input
 		input = _getch();
 
-		//Parse Input
+		//parse input
 		switch (input) {
-		case 'W':
-		case 'w':
-			selection--;
-			if (selection < 0) {
-				selection = this->_inventory.size() - 1;
-				bottomMargin = this->_inventory.size() - 1 - displayHeight;
-				if (bottomMargin < 0)
+			case 'W':
+			case 'w':
+				selection--;
+				if (selection < 0) {
+					selection = this->_inventory.size() - 1;
+					bottomMargin = this->_inventory.size() - 1 - displayHeight;
+					if (bottomMargin < 0)
+						bottomMargin = 0;
+				}
+				break;
+			case 'S':
+			case 's':
+				selection++;
+				if (selection > this->_inventory.size() - 1) {
+					selection = 0;
 					bottomMargin = 0;
-			}
-			break;
-		case 'S':
-		case 's':
-			selection++;
-			if (selection > this->_inventory.size() - 1) {
-				selection = 0;
-				bottomMargin = 0;
-			}
-			break;
-		case 'R':
-		case 'r':
-			promptRemove(selection);
-			totalItems = getTotalItems();
-			totalValue = getInventoryValue();
-			if (selection > this->_inventory.size() - 1)
-				selection = this->_inventory.size() - 1;
-			break;
-		case 'E':
-		case 'e':
-			this->equip(this->_inventory[selection], selection);
-			if (selection > this->_inventory.size() - 1)
-				selection = this->_inventory.size() - 1;
-			break;
+				}
+				break;
+			case 'R':
+			case 'r':
+				promptRemove(selection);
+				totalItems = getTotalItems();
+				totalValue = getInventoryValue();
+				if (selection > this->_inventory.size() - 1)
+					selection = this->_inventory.size() - 1;
+				break;
+			case 'E':
+			case 'e':
+				this->equip(this->_inventory[selection], selection);
+				if (selection > this->_inventory.size() - 1)
+					selection = this->_inventory.size() - 1;
+				break;
 		}
 
 		if (this->_inventory.size() == 0) {
@@ -478,7 +545,7 @@ void Player::openInventory()
 			return;
 		}
 
-		//Adjust Bottom Margin
+		//adjust bottom margin
 		if (selection > bottomMargin + displayHeight - 1) {
 			bottomMargin++;
 		} else if (selection < bottomMargin) {
@@ -486,34 +553,33 @@ void Player::openInventory()
 		}
 	}
 }
-void Player::openCharacter()
-{
-	//Configure Armor Representations
-	struct armorPieceRep
-	{
+void Player::openCharacter() {
+
+	//configure armor representations
+	struct armorPieceRep {
 		int location;
 		ItemSubType piece;
 		std::string display;
 	};
 
-	//Variables
+	//variables
 	int selection = 0;
 	int input = 0;
-	std::vector<armorPieceRep> armorPieceReps;	
+	std::vector<armorPieceRep> armorPieceReps;
 	std::vector<ColorString> rightDisplay;
 	clCons::cls();
 
-	//Display
+	//display
 	while (!(input == 27 || input == 'c' || input == 'C')) {
 
-		//Reload Pieces	
+		//reload pieces	
 		armorPieceReps = std::vector<armorPieceRep>();
 		for (int i = 1; i <= SUBTYPEWEAPONAFTER; i++) {
-			armorPieceReps.push_back(armorPieceRep{ i, ItemSubType(i), ""} );
+			armorPieceReps.push_back(armorPieceRep{ i, ItemSubType(i), "" });
 		}
-		armorPieceReps.push_back(armorPieceRep{ (int)armorPieceReps.size(), ItemSubType::SWORD, ""} );
+		armorPieceReps.push_back(armorPieceRep{ (int)armorPieceReps.size(), ItemSubType::SWORD, "" });
 
-		//Sort Equipment Displays
+		//sort equipment displays
 		for (int i = 0; i < this->_equipment.size(); i++) {
 			for (int j = 0; j < armorPieceReps.size(); j++) {
 				if (_equipment[i].getSubType() == armorPieceReps[j].piece) {
@@ -523,17 +589,17 @@ void Player::openCharacter()
 				}
 			}
 		}
-	
-		//Fill In Empty Slots
+
+		//fill in empty slots
 		for (int i = 0; i < SUBTYPEWEAPONAFTER; i++) {
 			if (armorPieceReps[i].display == "") {
-				armorPieceReps[i].display = clUtil::lowercase("[" + convertItemSubType(armorPieceReps[i].piece) +"]");
+				armorPieceReps[i].display = clUtil::lowercase("[" + convertItemSubType(armorPieceReps[i].piece) + "]");
 			}
 		}
 		if (armorPieceReps[(int)armorPieceReps.size() - 1].display == "")
 			armorPieceReps[(int)armorPieceReps.size() - 1].display = "[weapon]";
 
-		//Screen Properties
+		//screen properties
 		int leftDisplayWidth = 10;
 		int LEFT_DISPLAY_EXTRAS = 6;
 		int consoleWidth = clCons::getConsoleWidth();
@@ -541,17 +607,17 @@ void Player::openCharacter()
 		for (int i = 0; i < armorPieceReps.size(); i++) {
 			if (armorPieceReps[i].display.length() > leftDisplayWidth) {
 				leftDisplayWidth = armorPieceReps[i].display.length();
-			} 
+			}
 		}
 
-		//Pre Display
+		//pre-display
 		int oldConsoleWidth = consoleWidth;
 		consoleWidth = clCons::getConsoleWidth();
 		clCons::clsNew();
 		rightDisplayWidth = consoleWidth - leftDisplayWidth - LEFT_DISPLAY_EXTRAS - 2;
 		clCons::centerVer(armorPieceReps.size() + 6);
 
-		//Top Display
+		//top display
 		for (int k = 0; k < leftDisplayWidth + LEFT_DISPLAY_EXTRAS; k++) {
 			if (k == 0) {
 				std::cout << "  +";
@@ -562,7 +628,7 @@ void Player::openCharacter()
 			}
 		}
 
-		//Set Right Display
+		//set right display
 		rightDisplay = std::vector<ColorString>();
 		ColorString toDisplay;
 
@@ -581,13 +647,14 @@ void Player::openCharacter()
 		}
 
 
-		//IF NO PIECE EQUIPPED
+		//if no piece equipped
 		if (armorPieceReps[selection].display == ("[" + clUtil::lowercase(convertItemSubType(armorPieceReps[selection].piece)) + "]") || (armorPieceReps[selection].display == "[weapon]")) {
-			rightDisplay.push_back(ColorString("", ColorFlag::GRAY, 0, 0));			
+			rightDisplay.push_back(ColorString("", ColorFlag::GRAY, 0, 0));
 			toDisplay = ColorString(clCons::centerStringIn(rightDisplayWidth, "No piece equipped here."), ColorFlag::GRAY, true, 0);
 			rightDisplay.push_back(toDisplay);
 		}
-		//IF PIECE EQUIPPED
+
+		//if piece equipped
 		else {
 			bool equipped = true;
 			if (armorPieceReps[selection].piece > ItemSubType(SUBTYPEWEAPONAFTER)) {
@@ -601,10 +668,10 @@ void Player::openCharacter()
 			rightDisplay.push_back(toDisplay);
 		}
 
-		//Middle Display
+		//middle display
 		for (int i = 0; i < armorPieceReps.size(); i++) {
 
-			//Left Display
+			//left display
 			std::cout << "  |";
 			if (armorPieceReps[i].display == ("[" + clUtil::lowercase(convertItemSubType(armorPieceReps[i].piece)) + "]") || (armorPieceReps[i].display == "[weapon]")) {
 				ColorManager::setForegroundColor(ColorFlag::GRAY, true);
@@ -622,7 +689,7 @@ void Player::openCharacter()
 			}
 			std::cout << "|";
 
-			//Right Display
+			//right display
 			if (rightDisplay.size() > i) {
 				if (rightDisplay[i].content != "") {
 					ColorManager::csout(rightDisplay[i]);
@@ -630,18 +697,18 @@ void Player::openCharacter()
 						std::cout << " ";
 					}
 				} else {
-				for (int j = 0; j < rightDisplayWidth; j++) {
-					std::cout << " ";
+					for (int j = 0; j < rightDisplayWidth; j++) {
+						std::cout << " ";
+					}
 				}
-			}	
 			} else {
 				for (int j = 0; j < rightDisplayWidth; j++) {
 					std::cout << " ";
 				}
-			}		
+			}
 		}
 
-		//Bottom Display
+		//bottom display
 		for (int k = 0; k < leftDisplayWidth + LEFT_DISPLAY_EXTRAS; k++) {
 			if (k == 0) {
 				std::cout << "  +";
@@ -652,7 +719,7 @@ void Player::openCharacter()
 			}
 		}
 
-		//Exp Bar Display
+		//experience bar display
 		int barWidth = consoleWidth - 6;
 		int barFullness = (int)(((double)this->_exp / (double)this->_levels[this->_level - 1].expNeeded) * (double)barWidth);
 		std::cout << std::endl;
@@ -670,51 +737,51 @@ void Player::openCharacter()
 		std::cout << ">" << std::endl << std::endl;
 		clCons::centerHor("[ESC or C - Return]-[E - Unequip]-[K - Attributes & Stats]-", '-');
 
-		//Grab Input
+		//grab input
 		input = _getch();
 
-		//Parse Input
+		//parse input
 		switch (input) {
-		case 'W':
-		case 'w':
-			selection--;
-			if (selection < 0) {
-				selection = armorPieceReps.size() - 1;
-			}
-			break;
-		case 'S':
-		case 's':
-			selection++;
-			if (selection > armorPieceReps.size() - 1) {
-				selection = 0;
-			}
-			break;
-		case 'x':
-		case 'X':
-			this->addXp(1);
-			break;
-		case 'e':
-		case 'E':
-			this->unequip(armorPieceReps[selection].piece);
-			break;
-		case 'k':
-		case 'K':
-			this->openAttributes();
-			break;
+			case 'W':
+			case 'w':
+				selection--;
+				if (selection < 0) {
+					selection = armorPieceReps.size() - 1;
+				}
+				break;
+			case 'S':
+			case 's':
+				selection++;
+				if (selection > armorPieceReps.size() - 1) {
+					selection = 0;
+				}
+				break;
+			case 'x':
+			case 'X':
+				this->addXp(1);
+				break;
+			case 'e':
+			case 'E':
+				this->unequip(armorPieceReps[selection].piece);
+				break;
+			case 'k':
+			case 'K':
+				this->openAttributes();
+				break;
 		}
 	}
 }
-void Player::openAttributes()
-{
-	//Variables
+void Player::openAttributes() {
+
+	//variables
 	int input = 0;
 	int selection = 0;
 	ColorString emptyLine = ColorString("", ColorFlag::GRAY, 0, 0, false);
 
-	//Input
+	//input
 	while (input != '\033' && input != 'k' && input != 'K') {
 
-		//Calculate Display
+		//calculate display
 		std::vector<ColorString> toDisplay;
 		toDisplay.push_back(ColorString("Attribute Points: " + to_string(this->_attributePoints), ColorFlag::GRAY, true, 0, 3, true));
 		toDisplay.push_back(emptyLine);
@@ -729,17 +796,17 @@ void Player::openAttributes()
 		toDisplay.push_back(ColorString(spiritContent, ColorFlag::CYAN, true, 1, 1, true));
 		toDisplay.push_back(ColorString(capabilityContent, ColorFlag::CYAN, true, 1, 1, true));
 		toDisplay.push_back(emptyLine);
-		toDisplay.push_back(ColorString("  Effective Armor (" + to_string(this->getEffectiveArmor()) + ") x Effective Endurance (" + to_string(this->getEffectiveEndurance()) + ")", ColorFlag::GRAY, true, 0, 100, true));	
+		toDisplay.push_back(ColorString("  Effective Armor (" + to_string(this->getEffectiveArmor()) + ") x Effective Endurance (" + to_string(this->getEffectiveEndurance()) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("+ Base Health (" + to_string(CalcManager::getBaseHealth(this->_level)) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("= Total HP: " + to_string(this->getMaxHealth()), ColorFlag::RED, true, 0, 100, true));
 		toDisplay.push_back(emptyLine);
-		toDisplay.push_back(ColorString("  Base Regeneration (" + to_string(this->getLevel()) + ") x Effective Spirit (" + to_string((float)((this->_spirit * 2) + 100)/ 100) + ")", ColorFlag::GRAY, true, 0, 100, true));	
-		toDisplay.push_back(ColorString("= Total Regeneration: " + to_string((int)this->getRegeneration()), ColorFlag::CYAN, true, 0, 100, true));		
+		toDisplay.push_back(ColorString("  Base Regeneration (" + to_string(this->getLevel()) + ") x Effective Spirit (" + to_string((float)((this->_spirit * 2) + 100) / 100) + ")", ColorFlag::GRAY, true, 0, 100, true));
+		toDisplay.push_back(ColorString("= Total Regeneration: " + to_string((int)this->getRegeneration()), ColorFlag::CYAN, true, 0, 100, true));
 		toDisplay.push_back(emptyLine);
-		toDisplay.push_back(ColorString("  Effective Capability (" + to_string((float)this->getTotalDamage(true, false) - (float)this->getTotalDamage(false, false)) + ") + Weapon Damage (" + to_string(this->getWeapon()->getEffect()) + ") x Weapon Proficiency (" + to_string(this->getWeaponProficiency()) + ")", ColorFlag::GRAY, true, 0, 100, true));	
+		toDisplay.push_back(ColorString("  Effective Capability (" + to_string((float)this->getTotalDamage(true, false) - (float)this->getTotalDamage(false, false)) + ") + Weapon Damage (" + to_string(this->getWeapon()->getEffect()) + ") x Weapon Proficiency (" + to_string(this->getWeaponProficiency()) + ")", ColorFlag::GRAY, true, 0, 100, true));
 		toDisplay.push_back(ColorString("= Total Damage: " + to_string((int)this->getTotalDamage()), ColorFlag::PURPLE, true, 0, 100, true));
 
-		//Display
+		//display
 		clCons::cls();
 		clCons::centerVerhor(toDisplay.size() + 4, "[Attributes & Stats]", '-', 2);
 		for (int i = 0; i < toDisplay.size(); i++) {
@@ -748,59 +815,57 @@ void Player::openAttributes()
 		std::cout << std::endl << std::endl;
 		clCons::centerHor("[E - Spend Point]-[Esc - Return]", '-');
 
-		//Gather Input
+		//gather input
 		input = _getch();
 		switch (input) {
-		case 'w':
-		case 'W':
-			selection--;
-			if (selection < 0) {
-				selection = 2;
-			}
-			break;
-		case 's':
-		case 'S':
-			selection++;
-			if (selection > 2) {
-				selection = 0;
-			}
-			break;
-		case 'e':
-		case 'E':
-			if (this->_attributePoints > 0) {
-				this->addAttribute(selection);
-			}
+			case 'w':
+			case 'W':
+				selection--;
+				if (selection < 0) {
+					selection = 2;
+				}
+				break;
+			case 's':
+			case 'S':
+				selection++;
+				if (selection > 2) {
+					selection = 0;
+				}
+				break;
+			case 'e':
+			case 'E':
+				if (this->_attributePoints > 0) {
+					this->addAttribute(selection);
+				}
 		}
 	}
 	clCons::cls();
 }
-void Player::promptRemove(int atIndex)
-{
-	//Variables
+void Player::promptRemove(int atIndex) {
+
+	//variables
 	std::vector<std::string> removeOptions;
 	removeOptions.push_back("Yes");
 	removeOptions.push_back("Nevermind");
 
-	//Number Chooser
+	//number chooser
 	int quantity = 1;
 	if (this->_inventory[atIndex].getQuantity() > 1)
 		quantity = clCons::numberChooser("How Many?", 1, this->_inventory[atIndex].getQuantity());
 
-	//Pre-Menu
+	//pre-menu
 	clCons::cls();
 	if (clCons::menu("[Are you sure you want to remove " + to_string(quantity) + " " + this->_inventory[atIndex].getName() + "(s)?]", "", removeOptions) == 1) {
 		removeFromInventory(atIndex, quantity);
 	}
 }
-void Player::removeFromInventory(int atIndex, int quantity)
-{
+void Player::removeFromInventory(int atIndex, int quantity) {
 	if (quantity == this->_inventory[atIndex].getQuantity())
 		this->_inventory.erase(this->_inventory.begin() + atIndex);
 	else
 		this->_inventory[atIndex].remove(quantity);
 }
-void Player::addXp(int thisMuch)
-{
+void Player::addXp(int thisMuch) {
 	this->_exp += thisMuch;
 	while (this->_exp >= this->_levels[this->_level - 1].expNeeded) {
 		this->_exp -= this->_levels[this->_level - 1].expNeeded;
@@ -815,9 +880,9 @@ void Player::addXp(int thisMuch)
 		this->_attributePoints += 2;
 	}
 }
-void Player::equip(Item equipThis, int index)
-{
-	//Prevalidate
+void Player::equip(Item equipThis, int index) {
+
+	//prevalidate
 	if (!(equipThis.getType() == WEAPON || equipThis.getType() == ARMOR))
 		return;
 	if (equipThis.getLevel() > this->_level && index != -1) {
@@ -833,20 +898,20 @@ void Player::equip(Item equipThis, int index)
 		return;
 	}
 
-	//Unequip Current Piece
+	//unequip current piece
 	this->unequip(equipThis.getSubType());
 
-	//Equip New Piece
+	//equip new piece
 	this->_equipment.push_back(equipThis);
 
-	//Remove From Inventory
+	//remove from inventory
 	if (index != -1) {
 		this->_inventory.erase(this->_inventory.begin() + index);
 	}
 }
-void Player::unequip(ItemSubType thisPiece)
-{
-	//Unequip Armor
+void Player::unequip(ItemSubType thisPiece) {
+
+	//unequip armor
 	if (thisPiece <= ItemSubType(SUBTYPEWEAPONAFTER)) {
 		for (int i = 0; i < this->_equipment.size(); i++) {
 			if (this->_equipment[i].getSubType() == thisPiece) {
@@ -855,24 +920,22 @@ void Player::unequip(ItemSubType thisPiece)
 			}
 		}
 
-	//Unequip Weapon
+	//unequip weapon
 	} else {
 		for (int i = 0; i < this->_equipment.size(); i++) {
 			if (this->_equipment[i].getSubType() > ItemSubType(SUBTYPEWEAPONAFTER)) {
 				this->addItemToInventory(this->_equipment[i]);
 				this->_equipment.erase(this->_equipment.begin() + i);
-			}			
+			}
 		}
 	}
 }
-void Player::updateHealth()
-{
+void Player::updateHealth() {
 	if (this->_health > this->getMaxHealth()) {
 		this->_health = this->getMaxHealth();
 	}
 }
-bool Player::getPiece(ItemSubType thisType, Item* thisItem)
-{
+bool Player::getPiece(ItemSubType thisType, Item* thisItem) {
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getSubType() == thisType) {
 			*thisItem = this->_equipment[i];
@@ -884,8 +947,7 @@ bool Player::getPiece(ItemSubType thisType, Item* thisItem)
 	}
 	return false;
 }
-Item Player::getPiece(ItemSubType thisType, bool* equipped)
-{
+Item Player::getPiece(ItemSubType thisType, bool* equipped) {
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getSubType() == thisType) {
 			return this->_equipment[i];
@@ -897,8 +959,7 @@ Item Player::getPiece(ItemSubType thisType, bool* equipped)
 	*equipped = false;
 	return Item();
 }
-Item Player::getWeapon(bool* equipped)
-{
+Item Player::getWeapon(bool* equipped) {
 	*equipped = false;
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getSubType() > ItemSubType(SUBTYPEWEAPONAFTER)) {
@@ -907,8 +968,7 @@ Item Player::getWeapon(bool* equipped)
 		}
 	}
 }
-bool Player::getWeapon(Item* thisItem)
-{
+bool Player::getWeapon(Item* thisItem) {
 	for (int i = 0; i < this->_equipment.size(); i++) {
 		if (this->_equipment[i].getSubType() > ItemSubType(SUBTYPEWEAPONAFTER)) {
 			*thisItem = this->_equipment[i];
@@ -916,9 +976,8 @@ bool Player::getWeapon(Item* thisItem)
 		}
 	}
 }
-bool Player::takeDamage(int thisMuch)
-{
-	//Returns whether or not enemy died after taking damage
+//RETURNS - whether or not player died after taking damage
+bool Player::takeDamage(int thisMuch) {
 	this->_health -= thisMuch;
 	if (this->_health < 1) {
 		this->_health = 0;
@@ -927,23 +986,23 @@ bool Player::takeDamage(int thisMuch)
 		return false;
 	}
 }
-ColorString Player::createHealthBar(int width)
-{
-	//Variables
+ColorString Player::createHealthBar(int width) {
+
+	//variables
 	ColorString healthBar;
 	std::string text = "HP: " + to_string(this->_health) + "/" + to_string(this->getMaxHealth());
 	std::string content = text + " <";
 	int contentWidth = width - 2 - text.length();
 	int fullness = (((float)this->_health / (float)this->getMaxHealth()) * (float)contentWidth);
 
-	//Hard Borders
+	//hard Borders
 	if (this->_health == 0) {
 		fullness = 0;
 	} else if (this->_health == this->getMaxHealth()) {
 		fullness = contentWidth;
 	}
 
-	//Fill String
+	//fill String
 	for (int i = 0; i < fullness; i++) {
 		content += "|";
 	}
@@ -952,7 +1011,7 @@ ColorString Player::createHealthBar(int width)
 	}
 	content += ">";
 
-	//Colorize
+	//colorize
 	healthBar = ColorString(content, ColorFlag::RED, text.length() + 2, fullness + text.length() + 2, true);
 	healthBar.configureWordTypeDisplay(0, 0, false);
 	return healthBar;

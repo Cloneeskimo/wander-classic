@@ -1,35 +1,57 @@
-#include "map.h"
 
-//Consctor
-Map::Map(std::string fileSource, std::string storyName)
-{
+#include "Map.h"
+
+/* EnemyInfo */
+
+//Node Conversion Functions
+Node EnemyInfo::convertToNode() {
+
+	//create and return node
+	Node enemyInfo("enemy info", "enemy info");
+	enemyInfo.addChild(this->enemy.convertToNode());
+	enemyInfo.addChild(Node("map", this->map));
+	return enemyInfo;
+}
+EnemyInfo EnemyInfo::createEnemyInfoFromNode(Node* node) {
+
+	//create and return enemy info
+	EnemyInfo enemyInfo;
+	enemyInfo.enemy = Enemy::createEnemyFromNode(node->getChildByName("enemy"));
+	enemyInfo.map = node->getChildByName("map")->getValue();
+	return enemyInfo;
+}
+
+/* Map */
+
+//Constructors
+Map::Map(std::string fileSource, std::string storyName) {
 	this->construct(fileSource, storyName);
 }
-void Map::construct(std::string fileSource, std::string storyName)
-{
-	//Set Map Info
+void Map::construct(std::string fileSource, std::string storyName) {
+
+	//set map info
 	this->_fileSource = fileSource;
 	this->_storyName = storyName;
 	this->_width = this->_height = 0;
 
-	//Load Map Info
+	//load map info
 	loadMapInfo();
 }
 
-//Functions
-void Map::loadMapInfo()
-{
-	//Variables
+//Other Functions
+void Map::loadMapInfo() {
+
+	//variables
 	std::string nextLine;
 	ifstream read;
 
-	//Open File
+	//open file
 	read.open("data//stories//" + StoryManager::loadStoryInfo(this->_storyName).folder + "//maps//" + _fileSource);
 	if (read.fail()) {
 		OptionsManager::wError("unable to open '" + this->_fileSource + "'", "MAP_H");
 	}
 
-	//Parse Line
+	//parse line
 	while (!read.eof()) {
 		getline(read, nextLine);
 
@@ -58,11 +80,11 @@ void Map::loadMapInfo()
 		} else if (nextLine.find("map name:") != std::string::npos) { //NAME
 			this->_name = clFile::cut(nextLine);
 		} else if (nextLine.find("start:") != std::string::npos) { //START
-			this->_startingPositions = stringToCoords(clFile::cut(nextLine));
+			this->_startingPositions = stringToCoordinates(clFile::cut(nextLine));
 		} else if (nextLine.find("gates:") != std::string::npos) { //GATES
 			Gate nextGate{};
-			
-			//Parse Line
+
+			//parse line
 			while (nextLine != "}") {
 				getline(read, nextLine);
 
@@ -73,13 +95,13 @@ void Map::loadMapInfo()
 				} else if (nextLine.find("map:") != std::string::npos) { //MAP
 					nextGate.map = clFile::cut(nextLine);
 				} else if (nextLine.find("at:") != std::string::npos) { //NEXT MAP LOCATION
-					nextGate.nextMapLocation = stringToCoords(clFile::cut(nextLine));
+					nextGate.nextMapLocation = stringToCoordinates(clFile::cut(nextLine));
 				}
 			}
 		}
 	}
 
-	//Set Spaces
+	//set spaces
 	for (int i = 0; i < this->_layout.size(); i++) {
 		for (int j = 0; j < this->_layout[i].length(); j++) {
 			if (this->_layout[i][j] == this->_space) {
@@ -88,25 +110,25 @@ void Map::loadMapInfo()
 			for (int k = 0; k < this->_gates.size(); k++) {
 				if (this->_layout[i][j] == this->_gates[k].symbol) {
 					this->_layout[i][j] = ' ';
-					this->_gates[k].location.push_back(Coord{ j, i });
+					this->_gates[k].location.push_back(Coordinate{ j, i });
 				}
 			}
 		}
 	}
-	
-	//Close File
+
+	//close file
 	read.close();
 }
-void Map::displayMap(bool withEntities, std::vector<EnemyInfo> *enemies)
-{
-	//Clear Screen
+void Map::displayMap(bool withEntities, std::vector<EnemyInfo> *enemies) {
+
+	//clear screen
 	clCons::clsNew();
 
-	//Calculate Lines
+	//calculate lines
 	int emptyLines = clCons::getConsoleHeight() - this->_height - 2;
 	int topEmptyLines = emptyLines / 2;
 
-	//Display
+	//display
 	for (int i = 0; i < topEmptyLines; i++)
 		std::cout << std::endl;
 	if (withEntities) {
@@ -136,18 +158,18 @@ void Map::displayMap(bool withEntities, std::vector<EnemyInfo> *enemies)
 							ColorManager::resetForegroundColor();
 							displayRegular = false;
 						}
-					} 
+					}
 					for (int l = 0; l < enemies->size(); l++) {
 						if ((j == (*enemies)[l].enemy.getY() && k == (*enemies)[l].enemy.getX()) && (*enemies)[l].map == this->_name) {
-							if ((*enemies)[l].enemy.getAgroed()) {			
+							if ((*enemies)[l].enemy.getAgroed()) {
 								ColorManager::setForegroundColor(ColorFlag::RED, true);
-							} else {			
+							} else {
 								ColorManager::setForegroundColor(ColorFlag::RED, false);
 							}
 							std::cout << this->_entityLayout[j][k];
 							ColorManager::resetForegroundColor();
 							displayRegular = false;
-						} 
+						}
 					}
 					if (displayRegular) {
 						std::cout << this->_entityLayout[j][k];
@@ -165,50 +187,50 @@ void Map::displayMap(bool withEntities, std::vector<EnemyInfo> *enemies)
 	std::cout << std::endl << std::endl;
 	ColorManager::centerHorColor(ColorFlag::GREEN, false, this->_name, ' ', 2);
 }
-void Map::updateEntities(std::vector<EnemyInfo> *enemies, std::vector<Player> *players)
-{
-	//Reset Positions
-	this->_playerPos = std::vector<Coord>();
+void Map::updateEntities(std::vector<EnemyInfo> *enemies, std::vector<Player> *players) {
+	
+	//reset positions
+	this->_playerPos = std::vector<Coordinate>();
 
-	//Load Players
+	//load players
 	this->_entityLayout = this->_layout;
 	for (int i = 0; i < players->size(); i++) {
 		this->_entityLayout[(*players)[i].getY()][(*players)[i].getX()] = (*players)[i].getSymbol();
-		_playerPos.push_back(Coord{ (*players)[i].getX(), (*players)[i].getY() });
+		_playerPos.push_back(Coordinate{ (*players)[i].getX(), (*players)[i].getY() });
 	}
 
-	//Load Enemies
+	//load enemies
 	for (int i = 0; i < enemies->size(); i++) {
 		if ((*enemies)[i].map == this->_name) {
 			this->_entityLayout[(*enemies)[i].enemy.getY()][(*enemies)[i].enemy.getX()] = (*enemies)[i].enemy.getSymbol();
 		}
 	}
 }
-void Map::setPlayerStartingPositions(std::vector<Player> *entities)
-{
-	//Assign starting positions
+void Map::setPlayerStartingPositions(std::vector<Player> *entities) {
+
+	//assign starting positions
 	for (int i = 0; i < entities->size(); i++) {
 		(*entities)[i].setLocation(this->_startingPositions[i].x, this->_startingPositions[i].y);
 	}
 }
-void Map::removeDefaultEnemyTiles()
-{
-	//Variables
+void Map::removeDefaultEnemyTiles() {
+
+	//variables
 	std::vector<char> enemyTiles;
 	std::string nextLine;
 	ifstream scan;
 
-	//Open File
+	//open file
 	scan.open("data//stories//" + StoryManager::loadStoryInfo(this->_storyName).folder + "//maps//" + _fileSource);
 	if (scan.fail()) {
 		OptionsManager::wError("Unable to open " + _fileSource, "MAP_H");
 	}
 
-	//Scan File
+	//scan file
 	while (!scan.eof()) {
 		getline(scan, nextLine);
 
-		//Identify all enemy symbols
+		//identify all enemy symbols
 		if (nextLine.find("enemy symbol:") != std::string::npos) {
 			bool exists = false;
 			for (int i = 0; i < enemyTiles.size(); i++) {
@@ -232,10 +254,9 @@ void Map::removeDefaultEnemyTiles()
 		}
 	}
 }
-std::vector<Coord> Map::stringToCoords(std::string these)
-{
+std::vector<Coordinate> Map::stringToCoordinates(std::string these) {
 	std::string nextNum;
-	std::vector<Coord> coords;
+	std::vector<Coordinate> Coordinates;
 	int nextX, nextY;
 	bool onY = false;
 	for (int i = 0; i < these.length() + 1; i++) {
@@ -250,27 +271,27 @@ std::vector<Coord> Map::stringToCoords(std::string these)
 			nextNum = "";
 			onY = !onY;
 			if (!onY) {
-				coords.push_back(Coord{ nextX, nextY });
+				Coordinates.push_back(Coordinate{ nextX, nextY });
 			}
 		}
 	}
-	return coords;
+	return Coordinates;
 }
-std::vector<EnemyInfo> Map::loadMapEnemies(int playerLevel)
-{
-	//Variables
+std::vector<EnemyInfo> Map::loadMapEnemies(int playerLevel) {
+	
+	//variables
 	std::string nextLine = "";
 	std::ifstream read;
 	bool framework = false;
 	int currentLine = 0;
 
-	//Open File
+	//open file
 	read.open("data//stories//" + StoryManager::loadStoryInfo(this->_storyName).folder + "//maps//" + _fileSource);
 	if (read.fail()) {
 		OptionsManager::wError("Unable to open '" + _fileSource + "'", "MAP_H");
 	}
 
-	//Skip to Enemy Section
+	//skip to enemy section
 	while (!(nextLine.find("enemies:") != std::string::npos)) {
 		getline(read, nextLine);
 		currentLine++;
@@ -279,7 +300,7 @@ std::vector<EnemyInfo> Map::loadMapEnemies(int playerLevel)
 		}
 	}
 
-	//Read Enemies
+	//read enemies
 	std::vector<EnemyInfo> enemies;
 	EnemyRandomInfo nextEnemy = EnemyRandomInfo();
 	Enemy newEnemy = Enemy();
@@ -287,9 +308,9 @@ std::vector<EnemyInfo> Map::loadMapEnemies(int playerLevel)
 	while (nextLine != "}") {
 		getline(read, nextLine);
 		if (!framework)
-		currentLine++;
+			currentLine++;
 
-		//Interpret Lines
+		//interpret lines
 		if (nextLine == "\t{" || (nextLine == "{" && framework)) { //NEW ENEMY
 			nextEnemy = EnemyRandomInfo();
 		} else if ((nextLine == "\t}" && !framework) || (nextLine == "}" && framework)) { //FINISHED WITH ENEMY
@@ -366,10 +387,9 @@ std::vector<EnemyInfo> Map::loadMapEnemies(int playerLevel)
 	return enemies;
 }
 
-//Getters
-std::vector<Coord> Map::getGatePositions()
-{
-	std::vector<Coord> gateLocs;
+//Accessors
+std::vector<Coordinate> Map::getGatePositions() {
+	std::vector<Coordinate> gateLocs;
 	for (int i = 0; i < this->_gates.size(); i++) {
 		for (int j = 0; j < this->_gates[i].location.size(); j++) {
 			gateLocs.push_back(this->_gates[i].location[j]);

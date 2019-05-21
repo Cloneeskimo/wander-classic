@@ -1,4 +1,4 @@
-#include "optionsManager.h"
+#include "OptionsManager.h"
 
 //Static Variables
 bool OptionsManager::backgroundWhite = true;
@@ -10,23 +10,23 @@ int OptionsManager::loadingProg = 0;
 int OptionsManager::loadingMax = 0;
 
 //Functions
-void OptionsManager::loadOptions()
-{
-	//Variables
+void OptionsManager::loadOptions() {
+
+	//variables
 	std::string nextLine = "";
 	ifstream read;
 
-	//Open File
+	//open file
 	read.open("data//options.wtxt");
 
-	//Parse Line
+	//parse line
 	while (!read.eof()) {
 		getline(read, nextLine);
 
 		if (nextLine.find("backgroundWhite:") != std::string::npos) { //BACKGROUND COLOR
 			if (clFile::cut(nextLine)[0] == '0') {
 				OptionsManager::backgroundWhite = false;
-			}	
+			}
 		} else if (nextLine.find("fast text:") != std::string::npos) { //FAST TEST
 			if (clFile::cut(nextLine)[0] == '1') {
 				OptionsManager::fastText = true;
@@ -44,12 +44,12 @@ void OptionsManager::loadOptions()
 		}
 	}
 
-	//Update Colors
+	//update colors
 	updateColors();
 }
-void OptionsManager::updateColors()
-{
-	//Update Colors
+void OptionsManager::updateColors() {
+
+	//update colors
 	if (OptionsManager::backgroundWhite) {
 		ColorManager::Background = BACKGROUND_BLUE | BACKGROUND_GREEN | BACKGROUND_RED | BACKGROUND_INTENSITY;
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -58,39 +58,38 @@ void OptionsManager::updateColors()
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_INTENSITY);
 	}
 }
-void OptionsManager::updateOptions()
-{
-	//Open options file
+void OptionsManager::updateOptions() {
+
+	//open options file
 	ofstream write;
 	write.open("data//options.wtxt");
 
-	//Write options
+	//write options
 	write << "backgroundWhite: " << OptionsManager::backgroundWhite << std::endl;
 	write << "fast text: " << OptionsManager::fastText << std::endl;
 	write << "fast movement: " << OptionsManager::fastMovement << std::endl;
 	write << "fast combat: " << OptionsManager::fastCombat << std::endl;
 	write << "difficulty: " << OptionsManager::difficulty << std::endl;
-	
-	//Close options file
+
+	//close options file
 	write.close();
 	return;
 }
-void OptionsManager::wError(std::string message, std::string file, bool fatal)
-{
+void OptionsManager::wError(std::string message, std::string file, bool fatal) {
 	if (fatal) {
 		clUtil::error(message, file, 0, "data\\error\\", "ErrorLog", "DO_DISPLAY DO_LOG FATAL_ERROR");
-	} else {	
+	} else {
 		clUtil::error(message, file, 0, "data\\error\\", "ErrorLog");
 	}
 }
-void OptionsManager::displayLoading(std::string message, bool addOne, bool reset)
-{
-	//Add One
+void OptionsManager::displayLoading(std::string message, bool addOne, bool reset) {
+
+	//add one
 	if (addOne && loadingProg < loadingMax) {
 		loadingProg++;
 	}
 
-	//Variables
+	//variables
 	std::string bar = "<<";
 	int barLength = (float)clCons::getConsoleWidth() * ((float)2 / (float)3);
 	int barCompletion = (((float)loadingProg / (float)loadingMax) * (float)barLength);
@@ -113,27 +112,23 @@ void OptionsManager::displayLoading(std::string message, bool addOne, bool reset
 		loadingBar = ColorString(bar, ColorFlag::YELLOW, 2, barCompletion + 2, true);
 	}
 
-	//Display
+	//display
 	clCons::cls();
 	clCons::clsNew();
 	clCons::centerVerhor(3, message, ' ', 1, false);
 	ColorManager::centerHorColor(loadingBar);
 
-	//Reset
-	if (reset) {
-		loadingMax = loadingProg = 0;
-	}
+	//reset
+	if (reset) loadingMax = loadingProg = 0;
 }
-std::string OptionsManager::getColorOption()
-{
+std::string OptionsManager::getColorOption() {
 	if (OptionsManager::backgroundWhite) {
 		return "white";
 	} else {
 		return "black";
 	}
 }
-std::string OptionsManager::getDifficultyOption()
-{
+std::string OptionsManager::getDifficultyOption() {
 	if (OptionsManager::difficulty == 0) {
 		return "easy";
 	} else if (OptionsManager::difficulty == 1) {

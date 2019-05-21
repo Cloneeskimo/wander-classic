@@ -1,26 +1,24 @@
-#include "attackManager.h"
+#include "AttackManager.h"
 
 //Static Variables
 std::vector<WeaponSkill> AttackManager::_weaponSkills = std::vector<WeaponSkill>();
 std::vector<Cooldown> AttackManager::_cooldowns = std::vector<Cooldown>();
 
-
 //Functions
-void AttackManager::openWeaponSkills(Player * player)
-{
-	//Variables
+void AttackManager::openWeaponSkills(Player * player) {
+
+	//variables
 	std::vector<std::string> weapons;
 	int input = 0;
 
-	//Acquire Weapon Levels
+	//acquire weapon levels
 	for (int i = 0; i < player->getWeaponLevels().size(); i++) {
 		weapons.push_back(convertItemSubType(player->getWeaponLevels()[i].weapon) + ": " + to_string(player->getWeaponLevels()[i].level));
 	}
 
-	//Menu
+	//menu
 	weapons.push_back("[Return]");
 	clCons::cls();
-
 	while (input != weapons.size()) {
 		input = ColorManager::menu(ColorFlag::GRAY, "[Weapon Skills]", ColorFlag::GRAY, "[Select to see skills]", ColorFlag::GRAY, weapons, '-', '\033', weapons.size());
 
@@ -30,9 +28,9 @@ void AttackManager::openWeaponSkills(Player * player)
 	}
 	clCons::cls();
 }
-void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon)
-{
-	//Variables
+void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon) {
+	
+	//variables
 	std::vector<ColorString> leftDisplay, rightDisplay;
 	std::vector<WeaponSkill*> skills;
 	int input = 0;
@@ -42,21 +40,22 @@ void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon
 	int rightDisplayWidth = 0;
 	int selection = 0;
 
-	//Load all skills for specific weapon
+	//load all skills for specific weapon
 	for (int i = 0; i < AttackManager::_weaponSkills.size(); i++) {
 		if (AttackManager::_weaponSkills[i].weapon == weapon) {
 			skills.push_back(&AttackManager::_weaponSkills[i]);
 		}
 	}
 
-	//Display Loop
+	//display Loop
 	clCons::cls();
 	while (input != '\033') {
-		//Variables
+
+		//variables
 		displayWidth = clCons::getConsoleWidth();
 		leftDisplay = rightDisplay = std::vector<ColorString>();
 
-		//Create Left Display
+		//create left display
 		leftDisplayWidth = 0;
 		for (int i = 0; i < skills.size(); i++) {
 			std::string pref = "  ", suff = "  ";
@@ -73,18 +72,18 @@ void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon
 				leftDisplayWidth = leftDisplay[i].length();
 			}
 		}
-		if (displayHeight == 0) 
+		if (displayHeight == 0)
 			displayHeight = leftDisplay.size() + 2;
 
-		//Create Right Display	
+		//create right display	
 		rightDisplayWidth = displayWidth - leftDisplayWidth - 3;
 		if (skills[selection]->level <= player->getWeaponLevel(weapon)) { //IF SKILL IS UNLOCKED
 
-			//Skill Name Display
+			//skill name display
 			rightDisplay.push_back(ColorString(clCons::centerStringIn(rightDisplayWidth, "-=[ " + skills[selection]->name + " ]=-"), ColorFlag::GREEN, true, 1, clUtil::wordCount(skills[selection]->name)));
 			rightDisplay.push_back(ColorString("", ColorFlag::GRAY, 0, 0, false));
 
-			//Skill Description Display
+			//skill description display
 			std::string nextDescLine = "";
 			for (int i = 0; i < skills[selection]->description.length(); i++) {
 				if (nextDescLine.length() > ((float)rightDisplayWidth * ((float)2 / (float)3)) && skills[selection]->description[i] == ' ') {
@@ -107,12 +106,12 @@ void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon
 			rightDisplay.insert(rightDisplay.begin(), ColorString("", ColorFlag::GRAY, 0, 0, false));
 		}
 
-		//Top Display
+		//top display
 		clCons::clsNew();
 		clCons::centerVer(displayHeight + 2);
 		ColorManager::centerHorColor(ColorString("--==[ " + convertItemSubType(weapon) + "S (Lv. " + to_string(player->getWeaponLevel(weapon)) + ") ]==--", ColorFlag::BLUE, true, 1, 3, true), ' ', 2);
 
-		//Middle Display
+		//middle display
 		for (int i = 0; i < displayHeight; i++) {
 			if (i == 0 || i == displayHeight - 1) { //TOP LINE & BOTTOM LINE
 				for (int j = 0; j < displayWidth; j++) {
@@ -152,27 +151,26 @@ void AttackManager::openSpecificWeaponSkills(Player * player, ItemSubType weapon
 			}
 		}
 
-		//Input
+		//input
 		input = _getch();
 		switch (input) {
-		case 'w':
-		case 'W':
-			selection--;
-			if (selection < 0)
-				selection = skills.size() - 1;
-			break;
-		case 's':
-		case 'S':
-			selection++;
-			if (selection > skills.size() - 1)
-				selection = 0;
-			break;
+			case 'w':
+			case 'W':
+				selection--;
+				if (selection < 0)
+					selection = skills.size() - 1;
+				break;
+			case 's':
+			case 'S':
+				selection++;
+				if (selection > skills.size() - 1)
+					selection = 0;
+				break;
 		};
 	}
 	clCons::cls();
 }
-void AttackManager::updateCooldowns(Player * player)
-{
+void AttackManager::updateCooldowns(Player * player) {
 	for (int i = 0; i < AttackManager::_cooldowns.size(); i++) {
 		if (AttackManager::_cooldowns[i].playerName == player->getName()) {
 			if (AttackManager::_cooldowns[i].turnsLeft == 0)
@@ -182,21 +180,21 @@ void AttackManager::updateCooldowns(Player * player)
 		}
 	}
 }
-void AttackManager::loadWeaponSkills(std::string storyName)
-{
-	//Variables
+void AttackManager::loadWeaponSkills(std::string storyName) {
+	
+	//variables
 	ifstream read;
 	AttackManager::_weaponSkills = std::vector<WeaponSkill>();
 	WeaponSkill nextWeaponSkill = WeaponSkill();
 	std::string nextLine = "";
 
-	//Open File
+	//open ile
 	read.open("data//stories//" + storyName + "//weaponskills.wtxt");
 	if (read.fail()) {
 		OptionsManager::wError("Unable to open 'weaponskills.wtxt'", "ATTACKMANAGER_H", true);
 	}
 
-	//Parse Line
+	//parse lines
 	while (!read.eof()) {
 		getline(read, nextLine);
 
@@ -219,8 +217,7 @@ void AttackManager::loadWeaponSkills(std::string storyName)
 		}
 	}
 }
-std::string AttackManager::findEffectInString(std::string string, int *start)
-{
+std::string AttackManager::findEffectInString(std::string string, int *start) {
 	std::string effect;
 	bool done = false;
 	while (!done) {
@@ -235,21 +232,21 @@ std::string AttackManager::findEffectInString(std::string string, int *start)
 	}
 	return effect;
 }
-void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std::vector<Player*> players, int playerTurn, std::vector<Enemy*> enemies, int playerTarget, int selection)
-{
-	//Collect Effect
+void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std::vector<Player*> players, int playerTurn, std::vector<Enemy*> enemies, int playerTarget, int selection) {
+	
+	//collect effect
 	std::vector<WeaponSkill> skills = AttackManager::getWeaponSkills(players[playerTurn]);
 	std::string effect = skills[selection].effectCode;
 
-	//Act On Effect
+	//act on effect
 	for (int i = 0; i < effect.length(); i++) {
 		if (effect.substr(i, 6) == "damage") { //DAMAGE
 
-			//Find Damage
+			//find damage
 			i += 7;
 			std::string damage = findEffectInString(effect, &i);
-			
-			//Determine Multiple
+
+			//determine multiple
 			bool multiple = false;
 			for (int i = 0; i < damage.length(); i++) {
 				if (damage[i] == 'x') {
@@ -258,7 +255,7 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				}
 			}
 
-			//Determine Damage
+			//determine damage
 			int dmg = 0;
 			if (multiple) {
 				dmg = players[playerTurn]->getTotalDamage() * stof(damage);
@@ -266,31 +263,31 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				dmg = stof(damage);
 			}
 
-			//Deal Damage
+			//deal damage
 			enemies[playerTarget]->takeDamage(dmg);
 
-			//Indicator
+			//indicator
 			indicators->push_back(IndicatorInfo(true, ColorString("-" + to_string(dmg), ColorFlag::RED, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " attacks " + enemies[playerTarget]->getName() + " for " + to_string(dmg) + " damage!", ColorFlag::RED, 0, 10000, true)));
-		
+
 		} else if (effect.substr(i, 4) == "stun") { //STUN
 
-			//Find Stun
+			//find stun
 			i += 5;
 			std::string stun = findEffectInString(effect, &i);
 
-			//Deal Stun
+			//deal stun
 			enemies[playerTarget]->stun(stoi(stun));
 
-			//Indicator
+			//indicator
 			indicators->push_back(IndicatorInfo(true, ColorString("-" + stun + "turns", ColorFlag::GRAY, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " stuns " + enemies[playerTarget]->getName() + " for " + stun + " turns!", ColorFlag::RED, 0, 10000, true)));
 
 		} else if (effect.substr(i, 3) == "aoe") { //AOE
-	
-			//Find AOE
+
+			//find AOE
 			i += 4;
 			std::string aoe = findEffectInString(effect, &i);
 
-			//Determine Multiple
+			//determine multiple
 			bool multiple = false;
 			for (int i = 0; i < aoe.length(); i++) {
 				if (aoe[i] == 'x') {
@@ -299,7 +296,7 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				}
 			}
 
-			//Determine Damage
+			//determine damage
 			int dmg = 0;
 			if (multiple) {
 				dmg = players[playerTurn]->getTotalDamage() * stof(aoe);
@@ -307,21 +304,21 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				dmg = stof(aoe);
 			}
 
-			//Deal Damage
+			//deal damage
 			for (int i = 0; i < enemies.size(); i++) {
 				enemies[i]->takeDamage(dmg);
 			}
 
-			//Indicator
+			//indicator
 			indicators->push_back(IndicatorInfo(true, ColorString("- " + to_string((dmg)* enemies.size()), ColorFlag::RED, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " attacks all enemies for " + to_string(dmg) + " damage each!", ColorFlag::RED, 0, 10000, true)));
 
 		} else if (effect.substr(i, 3) == "dot") { //DOT
 
-			//Find DOT
+			//find DOT
 			i += 4;
 			std::string dot = findEffectInString(effect, &i);
 
-			//Determine Multiple
+			//determine multiple
 			bool multiple = false;
 			for (int i = 0; i < dot.length(); i++) {
 				if (dot[i] == 'x') {
@@ -330,8 +327,8 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 					i--;
 				}
 			}
-			
-			//Determine Damage
+
+			//determine damage
 			int dmg = 0;
 			if (multiple) {
 				dmg = (float)players[playerTurn]->getTotalDamage() * stof(dot) + 0.5;
@@ -339,19 +336,19 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				dmg = stof(dot);
 			}
 
-			//Deal DOT
+			//deal DOT
 			enemies[playerTarget]->addDot(Dot(5, dmg));
 
-			//Indicator
+			//indicator
 			indicators->push_back(IndicatorInfo(true, ColorString("- " + to_string((int)(dmg * 5)), ColorFlag::GRAY, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " inflicts " + enemies[playerTarget]->getName() + " with " + to_string(dmg) + " damage for 5 turns!", ColorFlag::RED, 0, 10000, true)));
-		
+
 		} else if (effect.substr(i, 4) == "heal") { //SINGLE HEAL
 
-			//Find Heal
+			//find Heal
 			i += 5;
 			std::string heal = findEffectInString(effect, &i);
 
-			//Determine Multiple
+			//determine multiple
 			bool multiple = false;
 			for (int i = 0; i < heal.length(); i++) {
 				if (heal[i] == 'x') {
@@ -361,7 +358,7 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				}
 			}
 
-			//Determine Heal Value
+			//determine heal value
 			int healValue = 0;
 			if (multiple) {
 				healValue = (float)players[playerTurn]->getMaxHealth() * stof(heal) + 0.5;
@@ -369,19 +366,19 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				healValue = stof(heal);
 			}
 
-			//Deal Heal
+			//deal heal
 			players[playerTurn]->heal(healValue);
 
-			//Indicator
-			indicators->push_back(IndicatorInfo(false, ColorString("+ " + to_string((int)(healValue)), ColorFlag::GREEN, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " heals themself for " + to_string(healValue) + " HP!", ColorFlag::GREEN, 0, 10000, true)));	
+			//indicator
+			indicators->push_back(IndicatorInfo(false, ColorString("+ " + to_string((int)(healValue)), ColorFlag::GREEN, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " heals themself for " + to_string(healValue) + " HP!", ColorFlag::GREEN, 0, 10000, true)));
 
 		} else if (effect.substr(i, 5) == "group") { //GROUP HEAL
-		
-			//Find Heal
+
+			//find heal
 			i += 6;
 			std::string heal = findEffectInString(effect, &i);
 
-			//Determine Multiple
+			//determine multiple
 			bool multiple = false;
 			for (int i = 0; i < heal.length(); i++) {
 				if (heal[i] == 'x') {
@@ -391,9 +388,10 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 				}
 			}
 
-			//Heal Each Player Loop
+			//heal each player loop
 			for (int i = 0; i < players.size(); i++) {
-				//Determine Heal Value
+
+				//determine heal value
 				int healValue = 0;
 				if (multiple) {
 					healValue = (float)players[playerTurn]->getMaxHealth() * stof(heal) + 0.5;
@@ -401,33 +399,33 @@ void AttackManager::applyWeaponSkill(std::vector<IndicatorInfo>* indicators, std
 					healValue = stof(heal);
 				}
 
-				//Deal Heal	
+				//deal heal	
 				players[i]->heal(healValue);
-			
-				//Indicator
+
+				//indicator
 				indicators->push_back(IndicatorInfo(false, ColorString("+ " + to_string((int)(healValue)), ColorFlag::GREEN, 0, 10000, true), true, ColorString(players[playerTurn]->getName() + " heals " + players[i]->getName() + " for " + to_string(healValue) + " HP!", ColorFlag::GREEN, 0, 10000, true)));
 			}
 		}
 	}
 
-	//Apply Cooldown
+	//apply cooldown
 	AttackManager::_cooldowns.push_back(Cooldown(skills[selection].name, players[playerTurn]->getName(), skills[selection].cooldown));
 }
-void AttackManager::displayIndicators(IndicatorInfo info)
-{		
-	//Pre-Display
+void AttackManager::displayIndicators(IndicatorInfo info) {
+
+	//pre-display
 	clCons::clsNew();
 	for (int i = 0; i < (clCons::getConsoleHeight() / 2 - 1); i++) {
 		std::cout << std::endl;
 	}
 
-	//Display Message
+	//display message
 	ColorManager::centerHorColor(info.message);
 	for (int i = 0; i < clCons::getConsoleWidth() / 2 - (info.message.length() / 2); i++) {
 		std::cout << " ";
 	}
 
-	//Display Indicator
+	//display indicator
 	for (int i = 0; i < 6; i++) {
 		clCons::clsNew();
 		int heightToStart = clCons::getConsoleHeight() / 2;
@@ -449,8 +447,7 @@ void AttackManager::displayIndicators(IndicatorInfo info)
 		std::this_thread::sleep_for(std::chrono::milliseconds(150));
 	}
 }
-std::vector<std::string> AttackManager::weaponLevelCheck(std::vector<Player*> players)
-{
+std::vector<std::string> AttackManager::weaponLevelCheck(std::vector<Player*> players) {
 	bool hasCleared = false;
 	std::vector<std::string> toReturn;
 	for (int i = 0; i < players.size(); i++) {
@@ -467,13 +464,13 @@ std::vector<std::string> AttackManager::weaponLevelCheck(std::vector<Player*> pl
 
 	return toReturn;
 }
-std::vector<std::string> AttackManager::getWeaponSkillsList(Player * player)
-{
-	//Variables
+std::vector<std::string> AttackManager::getWeaponSkillsList(Player * player) {
+	
+	//variables
 	std::vector<std::string> weaponSkills;
 	std::string nextSkill = "";
 
-	//Add all related to equipped weapon
+	//add all related to equipped weapon
 	for (int i = 0; i < AttackManager::_weaponSkills.size(); i++) {
 		if (AttackManager::_weaponSkills[i].weapon == player->getWeapon()->getSubType()) {
 			if (AttackManager::_weaponSkills[i].level <= player->getWeaponLevel(AttackManager::_weaponSkills[i].weapon)) {
@@ -484,27 +481,26 @@ std::vector<std::string> AttackManager::getWeaponSkillsList(Player * player)
 		}
 	}
 
-	//Return
+	//return
 	return weaponSkills;
 }
-std::vector<WeaponSkill> AttackManager::getWeaponSkills(Player* player)
-{
-	//Variables
+std::vector<WeaponSkill> AttackManager::getWeaponSkills(Player* player) {
+	
+	//variables
 	std::vector<WeaponSkill> weaponSkills;
 	std::string nextSkill = "";
 
-	//Add all related to equipped weapon
+	//add all related to equipped weapon
 	for (int i = 0; i < AttackManager::_weaponSkills.size(); i++) {
 		if (AttackManager::_weaponSkills[i].weapon == player->getWeapon()->getSubType()) {
 			weaponSkills.push_back(AttackManager::_weaponSkills[i]);
 		}
 	}
 
-	//Return
+	//return
 	return weaponSkills;
 }
-std::vector<WeaponLevel> AttackManager::getGenericWeaponLevels()
-{
+std::vector<WeaponLevel> AttackManager::getGenericWeaponLevels() {
 	std::vector<WeaponLevel> toReturn;
 	toReturn.push_back(WeaponLevel(SWORD, 1));
 	toReturn.push_back(WeaponLevel(BOW, 1));
@@ -514,8 +510,7 @@ std::vector<WeaponLevel> AttackManager::getGenericWeaponLevels()
 	toReturn.push_back(WeaponLevel(HAMMER, 1));
 	return toReturn;
 }
-int AttackManager::getCooldown(Player * player, std::string skillName)
-{
+int AttackManager::getCooldown(Player * player, std::string skillName) {
 	int cooldown = 0;
 	for (int i = 0; i < AttackManager::_cooldowns.size(); i++) {
 		if (AttackManager::_cooldowns[i].skillName == skillName) {

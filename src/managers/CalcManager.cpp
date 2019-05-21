@@ -1,30 +1,27 @@
-#include "calcManager.h"
+#include "CalcManager.h"
 
-//Variables
-std::vector<EquipmentRandomInfo> CalcManager::armorRandomInfo;
-std::vector<EquipmentRandomInfo> CalcManager::weaponRandomInfo;
+//Data
+std::vector<RandomEquipmentInfo> CalcManager::armorRandomInfo;
+std::vector<RandomEquipmentInfo> CalcManager::weaponRandomInfo;
 
 //Random Info Functions
-void CalcManager::loadRandomInfo(std::string storyName)
-{
-	//Variables
+void CalcManager::loadRandomInfo(std::string storyName) {
+	
+	//variables
 	std::string nextLine;
 	std::string material;
 	std::vector<string> posAdjs, negAdjs;
 	int level;
 	int componentsRead = 0;
 	bool startReading = false;
-	armorRandomInfo = std::vector<EquipmentRandomInfo>();
+	armorRandomInfo = std::vector<RandomEquipmentInfo>();
 
-	//Open Armor File
+	//open armor file
 	std::ifstream read;
 	read.open("data//stories//" + storyName + "//random//armor.wtxt");
-	if (read.fail()) {
-		OptionsManager::wError("Unable to open armor.wtxt", "RANDOMMANAGER_H");
-	}
+	if (read.fail()) OptionsManager::wError("Unable to open armor.wtxt", "RANDOMMANAGER_H");
 
-	
-	//Read Armor File
+	//read armor file
 	getline(read, nextLine);
 	while (!read.eof()) {
 		if (nextLine.find("name:") != std::string::npos) {
@@ -41,21 +38,18 @@ void CalcManager::loadRandomInfo(std::string storyName)
 			componentsRead++;
 		}
 		if (componentsRead == 4) {
-			armorRandomInfo.push_back(EquipmentRandomInfo{ material, level, posAdjs, negAdjs });
+			armorRandomInfo.push_back(RandomEquipmentInfo{ material, level, posAdjs, negAdjs });
 			componentsRead = 0;
 		}
 		getline(read, nextLine);
 	}
 
-	//Open Weapon File
+	//open weapon file
 	read.close();
 	read.open("data//stories//" + storyName + "//random//weapons.wtxt");
-	if (read.fail()) {
-		OptionsManager::wError("Unable to open weapons.wtxt", "RANDOMMANAGER_H");
-	}
+	if (read.fail()) OptionsManager::wError("Unable to open weapons.wtxt", "RANDOMMANAGER_H");
 
-	
-	//Read Weapon File
+	//read weapon file
 	getline(read, nextLine);
 	while (!read.eof()) {
 		if (nextLine.find("name:") != std::string::npos) {
@@ -72,153 +66,131 @@ void CalcManager::loadRandomInfo(std::string storyName)
 			componentsRead++;
 		}
 		if (componentsRead == 4) {
-			weaponRandomInfo.push_back(EquipmentRandomInfo{ material, level, posAdjs, negAdjs });
+			weaponRandomInfo.push_back(RandomEquipmentInfo{ material, level, posAdjs, negAdjs });
 			componentsRead = 0;
 		}
 		getline(read, nextLine);
 	}
 
-	//Close File
+	//close file
 	read.close();
 
-	//Initiate Random Generation
+	//initiate random generation
 	srand((unsigned)time(NULL));
 }
-EquipmentRandomInfo CalcManager::getArmorRandomInfo(int level)
-{
+RandomEquipmentInfo CalcManager::getArmorRandomInfo(int level) {
 	int atIndex = 0;
 	for (int i = 0; i < CalcManager::armorRandomInfo.size(); i++) {
-		if (!(CalcManager::armorRandomInfo[i].level > level)) {
-			atIndex = i;
-		}
+		if (!(CalcManager::armorRandomInfo[i].level > level)) atIndex = i;
 	}
 	return CalcManager::armorRandomInfo[atIndex];
 }
-EquipmentRandomInfo CalcManager::getWeaponRandomInfo(int level)
-{
+RandomEquipmentInfo CalcManager::getWeaponRandomInfo(int level) {
 	int atIndex = 0;
 	for (int i = 0; i < CalcManager::weaponRandomInfo.size(); i++) {
-		if (!(CalcManager::weaponRandomInfo[i].level > level)) {
-			atIndex = i;
-		}
+		if (!(CalcManager::weaponRandomInfo[i].level > level)) atIndex = i;
 	}
 	return CalcManager::weaponRandomInfo[atIndex];
 }
 
 //Constant Calculations
-int CalcManager::getPieceArmorPoints(ItemSubType thisType)
-{
+int CalcManager::getPieceArmorPoints(ItemSubType thisType) {
 	switch (thisType) {
-	case NECKLACE:
-	case BELT:
-		return 1;
-	case HELMET:
-	case SHOULDERPADS:
-	case BRACERS:
-	case GLOVES:
-	case BOOTS:
-		return 2;
-	case LEGGINGS:
-		return 3;
-	case CHESTPIECE:
-		return 4;
-	case SWORD:
-	case BOW:
-	case NOSUBTYPE:
-		return 0;
+		case NECKLACE:
+		case BELT:
+			return 1;
+		case HELMET:
+		case SHOULDERPADS:
+		case BRACERS:
+		case GLOVES:
+		case BOOTS:
+			return 2;
+		case LEGGINGS:
+			return 3;
+		case CHESTPIECE:
+			return 4;
+		case SWORD:
+		case BOW:
+		case NOSUBTYPE:
+			return 0;
 	}
 }
-int CalcManager::getBaseArmorValue(int level)
-{
+int CalcManager::getBaseArmorValue(int level) {
 	return (((level * level) - level) / 4) + 1;
 }
 
 //Average Calculations
-int CalcManager::getBaseHealth(int level)
-{
+int CalcManager::getBaseHealth(int level) {
 	return (((level * level) - level) / 2) + 10;
 }
-int CalcManager::getAverageArmorForPiece(int level, ItemSubType thisType)
-{
+int CalcManager::getAverageArmorForPiece(int level, ItemSubType thisType) {
 	return getBaseArmorValue(level) * getPieceArmorPoints(thisType);
 }
-int CalcManager::getAverageArmor(int level)
-{
+int CalcManager::getAverageArmor(int level) {
 	int averageArmor = 0;
 	for (int i = 1; i <= SUBTYPEWEAPONAFTER; i++) {
 		averageArmor += getAverageArmorForPiece(level, ItemSubType(i));
 	}
 	return averageArmor;
 }
-int CalcManager::getAverageHealth(int level)
-{
+int CalcManager::getAverageHealth(int level) {
 	float effectiveEndurance = ((((float)2 / (float)3) * (float)level) + 100) / 100;
 	return getEffectiveArmor((float)getAverageArmor(level) * effectiveEndurance) + (float)getBaseHealth(level);
 }
-int CalcManager::getAverageDamage(int level)
-{
+int CalcManager::getAverageDamage(int level) {
 	return getAverageHealth(level) / 4;
 }
-int CalcManager::getAverageEnemyHealth(int level)
-{
-	//Factor in difficulty
-	float multiplier = 0.8;
-	if (OptionsManager::difficulty == 0) {
-		multiplier = 0.6;
-	} else if (OptionsManager::difficulty == 2) {
-		multiplier = 1.0;
-	}
+int CalcManager::getAverageEnemyHealth(int level) {
 
-	//Return HP
+	//factor in difficulty
+	float multiplier = 0.8;
+	if (OptionsManager::difficulty == 0) multiplier = 0.6;
+	else if (OptionsManager::difficulty == 2) multiplier = 1.0;
+
+	//return HP
 	return (float)getAverageHealth(level) * multiplier;
 }
-int CalcManager::getAverageEnemyDamage(int level)
-{
-	//Factor in difficulty
-	float multiplier = 1;
-	if (OptionsManager::difficulty == 0) {
-		multiplier = 0.8;
-	} else if (OptionsManager::difficulty == 2) {
-		multiplier = 1.2;
-	}
+int CalcManager::getAverageEnemyDamage(int level) {
 
-	//Return Damage
+	//factor in difficulty
+	float multiplier = 1;
+	if (OptionsManager::difficulty == 0) multiplier = 0.8;
+	else if (OptionsManager::difficulty == 2) multiplier = 1.2;
+
+	//return damage
 	int damage = ((float)getAverageHealth(level) / 9) * multiplier;
-	if (damage < 1) {
-		damage = 1;
-	}
+	if (damage < 1) damage = 1;
 	return damage;
 }
-int CalcManager::getEnemyHealth(int level, float eliteness)
-{
-	//Raw Health
+int CalcManager::getEnemyHealth(int level, float eliteness) {
+
+	//raw health
 	float health = getAverageEnemyHealth(level);
 
-	//Factor in Random
+	//factor in random
 	health *= ((float)(rand() % 40 + 81) / 100);
 
-	//Factor in Eliteness
+	//factor in eliteness
 	health = (float)health * eliteness;
 
-	//Return Health
+	//return health
 	return health;
 }
-int CalcManager::getEnemyDamage(int level, float eliteness)
-{
-	//Raw Health
+int CalcManager::getEnemyDamage(int level, float eliteness) {
+
+	//raw damage
 	float damage = getAverageEnemyDamage(level);
 
-	//Factor in Random
+	//factor in random
 	damage *= ((float)(rand() % 40 + 81) / 100);
 
-	//Factor in Eliteness
+	//factor in eliteness
 	damage = (float)damage * eliteness;
 
-	//Return Health
+	//return damage
 	return damage;
 }
-int CalcManager::getExp(int level, float eliteness)
-{
+int CalcManager::getExp(int level, float eliteness) {
 	float exp = (float)level / 5;
 	exp *= (eliteness * eliteness);
 	int expInt = (int)(exp + 0.5);
@@ -227,31 +199,30 @@ int CalcManager::getExp(int level, float eliteness)
 }
 
 //Random Item Generation Functions
-Item CalcManager::createRandomArmor(ArmorInfo info, float fortune)
-{
-	//Create Item
+Item CalcManager::createRandomArmor(ArmorInfo info, float fortune) {
+	
+	//create item
 	Item created;
 
-	//Determine Piece
+	//determine piece
 	if (info.piece == ItemSubType::NOSUBTYPE) {
 		info.piece = ItemSubType((rand() % (SUBTYPEWEAPONAFTER)) + 1);
 	}
 
-	//Determine Effect
+	//determine effect
 	if (info.effect == -1) {
 		float FortuneScale = 80 * (fortune - 1);
 		float luck = 1 + ((rand() % 80 - (40 - FortuneScale)) / 100) * fortune;
-		if (luck < 0.01) { luck = 0.01; }
+		if (luck < 0.01) luck = 0.01;
 
 		info.effect = luck * (float)CalcManager::getAverageArmorForPiece(info.level, info.piece);
-
 	}
 
-	//Determine Name
+	//determine name
 	if (info.name == "RANDOM") {
 		info.name = "";
 
-		EquipmentRandomInfo namingInfo = CalcManager::getArmorRandomInfo(info.level);
+		RandomEquipmentInfo namingInfo = CalcManager::getArmorRandomInfo(info.level);
 		if (info.effect > CalcManager::getAverageArmorForPiece(info.level, info.piece)) {
 			info.name += namingInfo.positiveAdjs[(rand() + 1) % namingInfo.positiveAdjs.size()] + " ";
 		} else if (info.effect < CalcManager::getAverageArmorForPiece(info.level, info.piece)) {
@@ -275,21 +246,21 @@ Item CalcManager::createRandomArmor(ArmorInfo info, float fortune)
 		}
 	}
 
-	//Apply Item Stats
+	//apply item stats
 	created.construct(ItemType::ARMOR, info.piece, info.name, CalcManager::getBaseArmorValue(info.level) * fortune, 1, info.level, info.effect);
 	return created;
 }
-Item CalcManager::createRandomWeapon(WeaponInfo info, float fortune)
-{
-	//Create Item
+Item CalcManager::createRandomWeapon(WeaponInfo info, float fortune) {
+	
+	//create item
 	Item created;
 
-	//Determine Piece
+	//determine piece
 	if (info.type == ItemSubType::NOSUBTYPE) {
 		info.type = ItemSubType((rand() % (ITEMSUBTYPES - (SUBTYPEWEAPONAFTER + 1))) + SUBTYPEWEAPONAFTER + 1);
 	}
 
-	//Determine Effect
+	//determine effect
 	if (info.effect == -1) {
 		float FortuneScale = 80 * (fortune - 1);
 		float luck = 1 + ((rand() % 80 - (40 - FortuneScale)) / 100) * fortune;
@@ -299,11 +270,11 @@ Item CalcManager::createRandomWeapon(WeaponInfo info, float fortune)
 
 	}
 
-	//Determine Name
+	//determine name
 	if (info.name == "RANDOM") {
 		info.name = "";
 
-		EquipmentRandomInfo namingInfo = CalcManager::getWeaponRandomInfo(info.level);
+		RandomEquipmentInfo namingInfo = CalcManager::getWeaponRandomInfo(info.level);
 		if (info.effect > CalcManager::getAverageDamage(info.level)) {
 			info.name += namingInfo.positiveAdjs[(rand() + 1) % namingInfo.positiveAdjs.size()] + " ";
 		} else if (info.effect < CalcManager::getAverageDamage(info.level)) {
@@ -326,17 +297,16 @@ Item CalcManager::createRandomWeapon(WeaponInfo info, float fortune)
 		}
 	}
 
-	//Apply Item Stats
+	//apply item stats
 	created.construct(ItemType::WEAPON, info.type, info.name, (CalcManager::getBaseArmorValue(info.level) * 3) * fortune, 1, info.level, info.effect);
 	return created;
 }
-std::vector<Item> CalcManager::createItemsFromStrings(std::vector<std::string> strings, int referenceLevel)
-{
+std::vector<Item> CalcManager::createItemsFromStrings(std::vector<std::string> strings, int referenceLevel) {
 	return convertDropsToItems(createDropsFromStrings(strings, referenceLevel));
 }
-std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> strings, int referenceLevel, float eliteness)
-{
-	//Set Enemy Drops
+std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> strings, int referenceLevel, float eliteness) {
+	
+	//set enemy drops
 	std::vector<Drop> drops;
 	std::string itemName = "RANDOM";
 	int itemChance = 50, itemQuantity = 1, itemValue = -1, itemLevel = referenceLevel, itemEffect = -1;
@@ -344,7 +314,7 @@ std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> s
 	ItemType itemType = ItemType(rand() % ITEMTYPES + 1);
 	ItemSubType itemSubType = NOSUBTYPE;
 
-	//Determine Lowest Bracket Level
+	//determine lowest bracket level
 	int lowestBracket = 10000;
 	for (int i = 0; i < strings.size(); i++) {
 		int thisBracket = 0;
@@ -358,20 +328,20 @@ std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> s
 		}
 	}
 
-	//Reduce To Lowest Bracket Level
+	//reduce to lowest bracket level
 	for (int i = 0; i < strings.size(); i++) {
 		for (int j = 0; j < lowestBracket; j++) {
 			strings[i].erase(strings[i].begin());
 		}
 	}
 
-	//Parse Lines
+	//parse lines
 	for (int i = 0; i < strings.size(); i++) {
 
 		if (strings[i].find("item chance:") != std::string::npos) { //ITEM CHANCE
 			if (clFile::cut(strings[i]) == "ADAPT")
 				itemChance = 50;
-			else 
+			else
 				itemChance = stoi(clFile::cut(strings[i]));
 		} else if (strings[i].find("item fortune:") != std::string::npos) { //ITEM FORTUNE
 			if (clFile::cut(strings[i]) != "ADAPT") {
@@ -417,7 +387,7 @@ std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> s
 		} else if (strings[i].find("item effect:") != std::string::npos) { //ITEM EFFECT
 			if (clFile::cut(strings[i]) == "ADAPT")
 				itemEffect = -1;
-			else 
+			else
 				itemEffect = stoi(clFile::cut(strings[i]));
 		} else if (strings[i].find("}") != std::string::npos) { //END OF DROP
 			if (itemValue = -1 & itemType != WEAPON && itemType != ARMOR) {
@@ -433,7 +403,7 @@ std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> s
 				drops.push_back(Drop{ Item(itemType, itemSubType, itemName, itemValue, itemQuantity, itemLevel, itemEffect), itemChance });
 			}
 
-			//Default Parameters
+			//default parameters
 			itemChance = 50;
 			itemName = "RANDOM";
 			itemType = ItemType(rand() % ITEMTYPES + 1);
@@ -446,8 +416,7 @@ std::vector<Drop> CalcManager::createDropsFromStrings(std::vector<std::string> s
 	}
 	return drops;
 }
-std::vector<Item> CalcManager::convertDropsToItems(std::vector<Drop> drops)
-{
+std::vector<Item> CalcManager::convertDropsToItems(std::vector<Drop> drops) {
 	std::vector<Item> items;
 	for (int i = 0; i < drops.size(); i++) {
 		items.push_back(drops[i].dropItem);

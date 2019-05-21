@@ -1,38 +1,37 @@
-#pragma once
+
+#ifndef Entity_h
+#define Entity_h
+
+//Includes
 #include <string>
 #include <vector>
-#include "optionsManager.h"
+#include <managers/OptionsManager.h>
 
-//Enums & Structs
-enum class Movement
-{
-	UP, RIGHT, DOWN, LEFT
-};
-enum class EntityType
-{
-	BASE, PLAYER, ENEMY
-};
-struct Collision
-{
+//Movement and EntityType Enums
+enum class Movement { UP, RIGHT, DOWN, LEFT };
+enum class EntityType { BASE, PLAYER, ENEMY };
+
+//Collision Struct
+struct Collision {
 	char collidedTile;
-	Coord tileLocation;
+	Coordinate tileLocation;
 	int movesMade;
 };
 
-class Entity
-{
+//Entity Class
+class Entity {
 public:
 
-	//Constructor
-	Entity() {};
-	Entity(EntityType type, std::string name, char symbol = 'O', int x = 1, int y = 1, int speed = 1);
+	//Constructors
+	Entity() {}; //default
+	Entity(EntityType type, std::string name, char symbol = 'O', int x = 1, int y = 1, int speed = 1); //full
 
-	//Setters
+	//Mutators
 	void setLocation(int x, int y) { this->_x = x; this->_y = y; }
 	void setX(int x) { this->_x = x; }
 	void setY(int y) { this->_y = y; }
-	
-	//Getters
+
+	//Accessors
 	int getX() { return this->_x; }
 	int getY() { return this->_y; }
 	int getSpeed() { return this->_speed; }
@@ -40,12 +39,12 @@ public:
 	std::string getName() { return this->_name; }
 	EntityType getEntityType() { return this->_type; }
 
-	//Functions
-	Collision moveEntity(std::vector<std::string> *layout, Movement direction, std::vector<Coord> gates);
+	//Other Functions
+	Collision moveEntity(std::vector<std::string> *layout, Movement direction, std::vector<Coordinate> gates);
 
 private:
 
-	//Variables
+	//Data
 	int _speed;
 	int _x;
 	int _y;
@@ -53,3 +52,5 @@ private:
 	std::string _name;
 	EntityType _type;
 };
+
+#endif

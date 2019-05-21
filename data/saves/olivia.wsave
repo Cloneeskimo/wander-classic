@@ -1,0 +1,234 @@
+SAVE: save
+{
+	STORY NAME: Main Story
+	MAP FILE: deepforest1.wmap
+	PAST EVENTS: past events
+	{
+		1: 1
+	}
+	PLAYERS: players
+	{
+		PLAYER: player
+		{
+			NAME: Olivia
+			SPEED: 1
+			X: 11
+			Y: 7
+			SYMBOL: O
+			LEVEL: 1
+			GOLD: 0
+			HEALTH: 7
+			ATTRIBUTE POINTS: 0
+			ENDURANCE: 0
+			SPIRIT: 0
+			CAPABILITY: 0
+			EXP: 1
+			INVENTORY: inventory
+			{
+				ITEM: item
+				{
+					TYPE: JUNK
+					SUBTYPE: NOSUBTYPE
+					NAME: Spider Leg
+					VALUE: 1
+					QUANTITY: 1
+					LEVEL: 1
+					EFFECT: -1
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: DAGGER
+					NAME: Broken Wooden Dagger
+					VALUE: 3
+					QUANTITY: 1
+					LEVEL: 1
+					EFFECT: 3
+				}
+			}
+			EQUIPMENT: equipment
+			{
+				ITEM: item
+				{
+					TYPE: ARMOR
+					SUBTYPE: CHESTPIECE
+					NAME: Bloodied White Shirt
+					VALUE: 1
+					QUANTITY: 1
+					LEVEL: 1
+					EFFECT: 3
+				}
+				ITEM: item
+				{
+					TYPE: WEAPON
+					SUBTYPE: STAFF
+					NAME: Webwood Staff
+					VALUE: 3
+					QUANTITY: 1
+					LEVEL: 1
+					EFFECT: 4
+				}
+			}
+			WEAPON LEVELS: weapon levels
+			{
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: SWORD
+					LEVEL: 1
+				}
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: BOW
+					LEVEL: 1
+				}
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: DAGGER
+					LEVEL: 2
+				}
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: STAFF
+					LEVEL: 1
+				}
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: WAND
+					LEVEL: 1
+				}
+				WEAPON LEVEL: weapon level
+				{
+					WEAPON: HAMMER
+					LEVEL: 1
+				}
+			}
+		}
+	}
+	ENEMY INFOS: enemy infos
+	{
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Spider
+				SYMBOL: F
+				HEALTH: 12
+				MAX HEALTH: 12
+				DAMAGE: 1
+				SPEED: 1
+				LEVEL: 1
+				X: 23
+				Y: 7
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Spider Leg
+							VALUE: 1
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: -1
+						}
+					}
+					DROP: drop
+					{
+						CHANCE: 20
+						ITEM: item
+						{
+							TYPE: WEAPON
+							SUBTYPE: BOW
+							NAME: Webwood Bow
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: 2
+						}
+					}
+					DROP: drop
+					{
+						CHANCE: 20
+						ITEM: item
+						{
+							TYPE: ARMOR
+							SUBTYPE: NECKLACE
+							NAME: Spider Cloth Necklace
+							VALUE: 1
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: 1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest I
+		}
+		ENEMY INFO: enemy info
+		{
+			ENEMY: enemy
+			{
+				NAME: Forest Spider
+				SYMBOL: F
+				HEALTH: 12
+				MAX HEALTH: 12
+				DAMAGE: 1
+				SPEED: 1
+				LEVEL: 1
+				X: 16
+				Y: 11
+				AGRO DISTANCE: 5
+				DROPS: drops
+				{
+					DROP: drop
+					{
+						CHANCE: 50
+						ITEM: item
+						{
+							TYPE: JUNK
+							SUBTYPE: NOSUBTYPE
+							NAME: Spider Leg
+							VALUE: 1
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: -1
+						}
+					}
+					DROP: drop
+					{
+						CHANCE: 20
+						ITEM: item
+						{
+							TYPE: WEAPON
+							SUBTYPE: WAND
+							NAME: Webwood Wand
+							VALUE: 3
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: 5
+						}
+					}
+					DROP: drop
+					{
+						CHANCE: 20
+						ITEM: item
+						{
+							TYPE: ARMOR
+							SUBTYPE: BELT
+							NAME: Spider Cloth Belt
+							VALUE: 1
+							QUANTITY: 1
+							LEVEL: 1
+							EFFECT: 1
+						}
+					}
+				}
+			}
+			MAP: Deep Forest I
+		}
+	}
+}

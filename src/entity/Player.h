@@ -1,23 +1,33 @@
-#pragma once
+
+#ifndef Player_h
+#define Player_h
+
+//Includes
 #include <vector>
 #include <map>
-#include "entity.h"
-#include "item.h"
-#include "storyManager.h"
-#include "colorManager.h"
-#include "calcManager.h"
+#include <Item.h>
+#include <entity/Entity.h>
+#include <managers/StoryManager.h>
+#include <managers/ColorManager.h>
+#include <managers/CalcManager.h>
 
+//Maximum Stack Size
 const static int MAX_STACK_SIZE = 99;
 
-class Player : public Entity
-{
+//Player Class
+class Player : public Entity {
 public:
-	//Constructor
+
+	//Constructors
 	using Entity::Entity;
 	void constructPlayerExtras(int level, int gold, int health, int exp, std::vector<Level> levels, std::vector<Item> inventory, std::vector<Item> equipment);
 	void constructPlayerAttributes(int attributePoints, int endurance, int spirit, int capability);
 
-	//Getters
+	//Node Conversion Functions
+	Node convertToNode();
+	static Player Player::createPlayerFromNode(Node* node, std::vector<Level> levels);
+
+	//Accessors
 	Item getInventoryItem(int atIndex) { return this->_inventory[atIndex]; }
 	Item* getWeapon();
 	std::vector<Item>* getInventory() { return &this->_inventory; }
@@ -42,14 +52,14 @@ public:
 	float getTotalDamage(bool withCapability = true, bool withProficiency = true);
 	int getInventoryValue();
 
-	//Setters
+	//Mutators
 	void addItemToInventory(Item thisItem);
 	void setWeaponLevels(std::vector<WeaponLevel> weaponLevels) { this->_weaponLevels = weaponLevels; }
 	void addWeaponLevel(ItemSubType thisType);
 	void addAttribute(int choice); //0 - Endurance. 1 - Spirit. 2 - Capability.
 	void heal(int thisMuch = 0);
 
-	//Functions
+	//Other Functions
 	void passiveUpdate();
 	void openInventory();
 	void openCharacter();
@@ -57,7 +67,7 @@ public:
 	void promptRemove(int atIndex);
 	void removeFromInventory(int atIndex, int quantity = 1);
 	void addXp(int thisMuch);
-	void equip(Item equipThis, int index = -1); 
+	void equip(Item equipThis, int index = -1);
 	void unequip(ItemSubType thisPiece);
 	void updateHealth();
 	bool getPiece(ItemSubType thisType, Item* thisItem);
@@ -71,19 +81,23 @@ public:
 
 private:
 
-	//Variables
-	std::vector<Item> _equipment;
-	std::vector<Item> _inventory;
-	std::vector<Level> _levels;
-	std::vector<WeaponLevel> _weaponLevels;
+	//Basic Data
 	int _gold;
 	int _level;
 	int _health;
 	int _exp;
 
-	//Attributes
+	//Collection Data
+	std::vector<Item> _equipment;
+	std::vector<Item> _inventory;
+	std::vector<Level> _levels;
+	std::vector<WeaponLevel> _weaponLevels;
+
+	//Attribute Data
 	int _attributePoints = 0;
 	int _endurance = 0;
 	int _spirit = 0;
 	int _capability = 0;
 };
+
+#endif

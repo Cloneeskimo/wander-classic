@@ -1,21 +1,21 @@
-#include "storyManager.h"
+#include "StoryManager.h"
 
 //Functions
-StoryInfo StoryManager::loadStoryInfo(std::string storyName)
-{
-	//Variables
+StoryInfo StoryManager::loadStoryInfo(std::string storyName) {
+	
+	//variables
 	StoryInfo storyInfo{};
 	std::ifstream read;
 	std::string nextLine;
 	int componentsRead = 0;
 
-	//Open File
+	//open file
 	read.open("data//stories//" + storyName + "//settings.wstory");
 	if (read.fail()) {
 		OptionsManager::wError("Unable to open '" + storyName + "//settings.wstory'", "STORYMANAGER_H");
 	}
 
-	//Parse Line
+	//parse line
 	storyInfo.name = storyName;
 	while (!read.eof()) {
 		getline(read, nextLine);
@@ -32,17 +32,17 @@ StoryInfo StoryManager::loadStoryInfo(std::string storyName)
 					storyInfo.players.push_back((nextLine[i]) - 48);
 				}
 			}
-		} 
+		}
 	}
 
-	//Open Levels File
+	//open levels file
 	read.close();
 	read.open("data//stories//" + storyName + "//levels.wtxt");
 	if (read.fail()) {
 		OptionsManager::wError("Unable to open 'levels.wtxt'", "STORYMANAGER_H");
 	}
 
-	//Load Levels
+	//load levels
 	storyInfo.levels = std::vector<Level>();
 	int nextLevel, nextExp;
 	while (!read.eof()) {
@@ -53,20 +53,20 @@ StoryInfo StoryManager::loadStoryInfo(std::string storyName)
 
 	return storyInfo;
 }
-std::vector<std::string> StoryManager::getStoryList()
-{
-	//Variables
+std::vector<std::string> StoryManager::getStoryList() {
+	
+	//variables
 	std::vector<std::string> storyList;
 	std::string nextLine;
 	std::ifstream read;
 
-	//Open File
+	//open file
 	read.open("data//stories//stories.wtxt");
 	if (read.fail()) {
 		OptionsManager::wError("Unable to open 'stories.wtxt'", "STORYMANAGER_H", true);
 	}
 
-	//Read Stories
+	//read stories
 	while (!read.eof()) {
 		getline(read, nextLine);
 		if (nextLine != "{" && nextLine != "}" && nextLine != "" && nextLine != "stories:") {
@@ -74,7 +74,7 @@ std::vector<std::string> StoryManager::getStoryList()
 		}
 	}
 
-	//Close File
+	//close file
 	read.close();
 	return storyList;
 }

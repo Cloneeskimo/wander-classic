@@ -1,2 +1,0 @@
-[07/22/2017 22:18:31][MAP_H]: 'space' option not defined in file 'map1.wmap', assuming ' ' (Code: 0)
-[07/22/2017 22:19:03][MAP_H]: 'space' option not defined in file 'map1.wmap', assuming ' ' (Code: 0)

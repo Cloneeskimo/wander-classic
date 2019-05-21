@@ -1,6 +1,0 @@
-[07/29/2017 15:38:47][MAP_H]: Too many player starting spots defined for map deepforest.wmap. Extras ignored (Code: 0)
-[07/29/2017 19:58:20][STORYMANAGER_H]: Unable to open 'Main Story//settings.wstory' (Code: 0)
-[07/29/2017 19:59:20][MAP_H]: Unable to open Main Story//deepforest.wmap (Code: 0)
-[07/29/2017 20:00:45][MAP_H]: Unable to open Main Story//deepforest.wmap (Code: 0)
-[07/29/2017 20:02:46][STORYMANAGER_H]: Unable to open 'Main Story//settings.wstory' (Code: 0)
-[07/29/2017 21:00:30][MAP_H]: Unable to open 'clearing.wmap	' (Code: 0)
