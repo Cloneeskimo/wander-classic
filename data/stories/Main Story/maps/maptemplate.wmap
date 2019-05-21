@@ -1,0 +1,37 @@
+layout:
+{
+	[layout]
+}
+map name: [name]
+start: [x, y], [x, y]
+gates:
+{
+	{
+		tile: '[tile]'
+		map: [map name]
+		at: [x, y], [x, y]
+	}
+}
+enemies:
+{
+	{
+		enemy name: [name]
+		enemy symbol: '[symbol]'
+		enemy speed: [speed]
+		enemy eliteness: [eliteness]
+		enemy agro distance: [agro distance]
+		enemy level: [level]
+		enemy drops:
+		{
+			{
+
+			}
+			{
+
+			}
+			{
+
+			}	
+		}
+	}
+}

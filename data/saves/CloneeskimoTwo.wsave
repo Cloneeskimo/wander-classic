@@ -1,0 +1,216 @@
+saveData:
+{
+	story name: Main Story
+	map file: deepforest1.wmap
+	past events:
+	{
+		event1: 1
+	}
+	players:
+	{
+		player:
+		{
+			name: Cloneeskimo
+			speed: 1
+			player x: 11
+			player y: 4
+			symbol: 'C'
+			level: 1
+			gold: 0
+			health: 10
+			attribute points: 0
+			endurance: 0
+			spirit: 0
+			capability: 0
+			exp: 0
+			inventory: 
+			{
+			}
+			equipment:
+			{
+				item:
+				{
+					name: Broken Wooden Dagger
+					basetype: WEAPON
+					subtype: DAGGER
+					quantity: 1
+					value: 3
+					level: 1
+					effect: 3
+				}
+				item:
+				{
+					name: Bloodied White Shirt
+					basetype: ARMOR
+					subtype: CHESTPIECE
+					quantity: 1
+					value: 1
+					level: 1
+					effect: 3
+				}
+			}
+			weapon levels:
+			{
+				SWORD: 1
+				BOW: 1
+				DAGGER: 1
+				STAFF: 1
+				WAND: 1
+				HAMMER: 1
+			}
+		}
+	}
+	enemies: 
+	{
+		enemy:
+		{
+			enemy name: Forest Spider
+			enemy symbol: 'F'
+			enemy health: 10
+			enemy max health: 10
+			enemy damage: 1
+			enemy speed: 1
+			enemy level: 1
+			enemy x: 22
+			enemy y: 7
+			enemy agro distance: 5
+			enemy map: Deep Forest I
+			enemy drops:
+			{
+				item:
+				{
+					item chance: 50
+					item name: Spider Leg
+					item basetype: JUNK
+					item subtype: NOSUBTYPE
+					item quantity: 1
+					item level: 1
+					item effect: -1
+					item value: 1
+				}
+				item:
+				{
+					item chance: 20
+					item name: Webwood Staff
+					item basetype: WEAPON
+					item subtype: STAFF
+					item quantity: 1
+					item level: 1
+					item effect: 3
+					item value: 3
+				}
+				item:
+				{
+					item chance: 20
+					item name: Spider Cloth Boots
+					item basetype: ARMOR
+					item subtype: BOOTS
+					item quantity: 1
+					item level: 1
+					item effect: 2
+					item value: 1
+				}
+			}
+		}
+		enemy:
+		{
+			enemy name: Forest Spider
+			enemy symbol: 'F'
+			enemy health: 10
+			enemy max health: 10
+			enemy damage: 1
+			enemy speed: 1
+			enemy level: 1
+			enemy x: 10
+			enemy y: 9
+			enemy agro distance: 5
+			enemy map: Deep Forest I
+			enemy drops:
+			{
+				item:
+				{
+					item chance: 50
+					item name: Spider Leg
+					item basetype: JUNK
+					item subtype: NOSUBTYPE
+					item quantity: 1
+					item level: 1
+					item effect: -1
+					item value: 1
+				}
+				item:
+				{
+					item chance: 20
+					item name: Webwood Sword
+					item basetype: WEAPON
+					item subtype: SWORD
+					item quantity: 1
+					item level: 1
+					item effect: 2
+					item value: 3
+				}
+				item:
+				{
+					item chance: 20
+					item name: Spider Cloth Chestpiece
+					item basetype: ARMOR
+					item subtype: CHESTPIECE
+					item quantity: 1
+					item level: 1
+					item effect: 2
+					item value: 1
+				}
+			}
+		}
+		enemy:
+		{
+			enemy name: Forest Spider
+			enemy symbol: 'F'
+			enemy health: 11
+			enemy max health: 11
+			enemy damage: 1
+			enemy speed: 1
+			enemy level: 1
+			enemy x: 17
+			enemy y: 11
+			enemy agro distance: 5
+			enemy map: Deep Forest I
+			enemy drops:
+			{
+				item:
+				{
+					item chance: 50
+					item name: Spider Leg
+					item basetype: JUNK
+					item subtype: NOSUBTYPE
+					item quantity: 1
+					item level: 1
+					item effect: -1
+					item value: 1
+				}
+				item:
+				{
+					item chance: 20
+					item name: Webwood Dagger
+					item basetype: WEAPON
+					item subtype: DAGGER
+					item quantity: 1
+					item level: 1
+					item effect: 4
+					item value: 3
+				}
+				item:
+				{
+					item chance: 20
+					item name: Spider Cloth Boots
+					item basetype: ARMOR
+					item subtype: BOOTS
+					item quantity: 1
+					item level: 1
+					item effect: 2
+					item value: 1
+				}
+			}
+		}
+	}
+}

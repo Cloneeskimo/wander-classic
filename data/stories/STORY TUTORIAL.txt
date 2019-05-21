@@ -1,0 +1,143 @@
+THIS FILE WILL EXPLAIN ALL FILE PARAMETERS FOR BUILDING A WANDER STORY.
+
+ALL PARAMETERS ARE ALWAYS IN LOWER CASE.
+IN GENERAL, IT'S BEST TO LIST PARAMETERS IN GIVEN ORDER (COMPILER READS UP->DOWN).
+
+IF STUCK, USE THIS AND THE MAIN STORY FILES AS A REFERENCE
+
+---------------------------------------------------------------------------------
+REQUIRED MAP PARAMETERS:
+---------------------------------------------------------------------------------
+
+layout:
+{
+[vector of strings]
+}
+
+map name: [string]
+
+---------------------------------------------------------------------------------
+OPTIONAL MAP PARAMETERS:
+---------------------------------------------------------------------------------
+
+start: [comma seperated integers : coords]
+[default: none]
+
+space: '[char : space character in layout]' 
+[default: ' ']
+
+gates:
+{
+	{
+		tile: '[char : gate character in layout]'
+		map: [string : mapname]
+		at: [comma seperated integers : coords of positions of next map]
+	}
+	{
+		[repeating unit...etc...]
+	}
+}
+[default: none]
+
+enemies: 
+{
+	{
+		[see enemy parameters]
+	}
+	{
+		[repeating unit...etc...]
+	}
+}
+[default: none]
+
+---------------------------------------------------------------------------------
+ENEMY PARAMETERS:
+---------------------------------------------------------------------------------
+
+[IF A PARAMETER HAS A * IT IS REQUIRED]
+[TO LEAVE A PARAMETER AS DEFAULT, EITHER INPUT "ADAPT" OR JUST DON'T INCLUDE IT]
+
+*enemy name: [string]
+
+*symbol: '[char : enemy character in layout]'
+
+*enemy speed: [int : tiles enemy can move per turn]
+
+enemy eliteness: [float : how hard the enemy is]
+[default: 1.0]
+
+enemy agro distance: [int : how many tiles away the enemy can see a player]
+[default: 5]
+
+enemy level: [int]
+[default: average level of all players in map]
+[can add to default by using syntax: "ADAPT + [int : levels above average]"]
+
+enemy drops:
+{
+	{
+		[see drop parameters]
+	}
+	{
+		[repeating unit...etc...]
+	}
+}
+[default: none]
+
+---------------------------------------------------------------------------------
+DROP PARAMETERS:
+---------------------------------------------------------------------------------
+
+[IF A PARAMETER HAS A * IT IS REQUIRED]
+[TO LEAVE A PARAMETER AS DEFAULT, EITHER INPUT "ADAPT" OR JUST DON'T INCLUDE IT]
+[ItemType & ItemSubType types are listed below]
+
+item type: [ItemType]
+[default: random]
+
+item subtype: [ItemSubType]
+[default: random, depending on item type]
+
+item chance: [int : chance of dropping off of enemy as percentage]
+[default: 50]
+
+item name: [string]
+[default: if weapon/armor: randomizes based off weapon/armor randomization file. if other: stays as "RANDOM"]
+
+
+---------------------------------------------------------------------------------
+ITEM (SUB)TYPES:
+---------------------------------------------------------------------------------
+
+Item Types:
+JUNK, WEAPON, ARMOR, POTION, MISCELLANEOUS
+
+Item SubTypes (used for weapon/armor specification):
+NOSUBTYPE, 
+HELMET, SHOULDERPADS, NECKLACE, CHESTPIECE, BRACERS, GLOVES, BELT, LEGGINGS, BOOTS,
+SWORD, BOW, DAGGER, STAFF, WAND, HAMMER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

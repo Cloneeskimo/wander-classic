@@ -1,0 +1,116 @@
+layout:
+{
+            #########################
+     #####################################
+ #####            ###         ##############   ##
+###      K K     ##       K          ######   ##
+###             ##            F         ###  ####
+ G              #          ##            ##HH######
+ G                          #             #    #####
+###                        ##                    ###
+###           ###                         ##    ####
+ ####    K F   ###                         #  #####
+ ###         ######        K            Y      #####
+  ####          ##                           ######
+   #######              F                   #####
+     #######                         ###########
+       #############          #############
+          ############################
+                      ########
+}
+map name: Clearing
+entrance event: 3
+gates:
+{
+	{
+		tile: 'G'
+		map: deepforest2.wmap
+		at: 26, 9, 26, 10
+	}
+}
+enemies:
+{
+	{
+		enemy name: Kobold Chief
+		enemy symbol: 'Y'
+		enemy speed: 1
+		enemy eliteness: 1.2
+		enemy agro distance: 3
+		enemy level: ADAPT + 1
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 100
+				item name: Kobold Candle
+				item quantity: 2
+			}
+			{
+				item type: WEAPON
+				item chance: 100
+				item name: Superior [type] of the Kobold Chief
+				item fortune: 1.5
+			}
+			{
+				item type: ARMOR
+				item chance: 100
+				item name: Superior [type] of the Kobold Chief
+				item fortune: 1.5
+			}	
+		}
+	}
+	{
+		enemy name: Kobold
+		enemy symbol: 'K'
+		enemy speed: 1
+		enemy eliteness: 1.0
+		enemy agro distance: 5
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 50
+				item name: Kobold Candle
+			}
+			{
+				item type: WEAPON
+				item name: Kobold [type]
+				item chance: 20
+				item fortune: 1.0
+			}
+			{
+				item type: ARMOR
+				item chance: 20
+				item name: Kobold [type]
+				item fortune: 1.0
+			}	
+		}
+	}
+	{
+		enemy name: Forest Spider
+		enemy symbol: 'F'
+		enemy speed: 1
+		enemy eliteness: 1.0
+		enemy agro distance: 4
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 50
+				item name: Spider Leg
+			}
+			{
+				item type: WEAPON
+				item chance: 20
+				item name: Webwood [type]
+				item fortune: 0.8
+			}
+			{
+				item type: ARMOR
+				item chance: 20
+				item name: Spider Cloth [type]
+				item fortune: 0.8
+			}
+		}
+	}
+}

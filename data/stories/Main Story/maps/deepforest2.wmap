@@ -1,0 +1,78 @@
+layout:
+{
+           #############
+        ##################
+     #######         #######
+  ######        RR      ######
+  #####                    #####
+######          ##         ###
+###    F      ###         ####
+####           ##           ##
+####          ##     F      H
+###          ##            H
+ ##     RR  ###           ##
+  G          ####        ##
+   G        ##############
+    ##################
+	  ########
+}
+map name: Deep Forest II
+entrance event: 2
+gates:
+{
+	{
+		tile: 'G'
+		map: deepforest1.wmap
+		at: 25, 9, 25, 10
+	}
+	{
+		tile: 'H'
+		map: clearing.wmap
+		at: 2, 6, 2, 7	
+	}
+}
+enemies:
+{
+	{
+		enemy name: Forest Spider
+		enemy symbol: 'F'
+		enemy speed: 1
+		enemy eliteness: 1.0
+		enemy agro distance: 4
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 50
+				item name: Spider Leg
+			}
+			{
+				item type: WEAPON
+				item chance: 20
+				item name: Webwood [type]
+				item fortune: 0.8
+			}
+			{
+				item type: ARMOR
+				item chance: 20
+				item name: Spider Cloth [type]
+				item fortune: 0.8
+			}
+		}
+	}
+	{
+		enemy name: Forest Rat
+		enemy symbol: 'R'
+		enemy speed: 1
+		enemy eliteness: 0.5f
+		enemy agro distance: 5
+		enemy drops:
+		{
+			{
+				item type: JUNK
+				item chance: 50
+				item name: Rat Tail
+			}
+		}
+	}
+}

@@ -1,0 +1,302 @@
+story name: Main Story
+map file: deepforest2.wmap
+past events:
+{
+1
+2
+}
+players:
+{
+	{
+		name: Cloneeskimo
+		speed: 1
+		player x: 4
+		player y: 12
+		symbol: 'C'
+		level: 2
+		gold: 0
+		health: 13
+		attribute points: 2
+		endurance: 0
+		spirit: 0
+		capability: 0
+		exp: 0
+		inventory: 
+		{
+			{
+				name: Broken Wooden Dagger
+				basetype: WEAPON
+				subtype: DAGGER
+				quantity: 1
+				value: 3
+				level: 1
+				effect: 3
+			}
+			{
+				name: Spider Leg
+				basetype: JUNK
+				subtype: NOSUBTYPE
+				quantity: 1
+				value: 1
+				level: 1
+				effect: -1
+			}
+			{
+				name: Webwood Sword
+				basetype: WEAPON
+				subtype: SWORD
+				quantity: 1
+				value: 3
+				level: 1
+				effect: 2
+			}
+			{
+				name: Webwood Bow
+				basetype: WEAPON
+				subtype: BOW
+				quantity: 1
+				value: 3
+				level: 1
+				effect: 4
+			}
+		}
+		equipment:
+		{
+			{
+				name: Bloodied White Shirt
+				basetype: ARMOR
+				subtype: CHESTPIECE
+				quantity: 1
+				value: 1
+				level: 1
+				effect: 3
+			}
+			{
+				name: Webwood Hammer
+				basetype: WEAPON
+				subtype: HAMMER
+				quantity: 1
+				value: 3
+				level: 1
+				effect: 4
+			}
+			{
+				name: Spider Cloth Shoulderpads
+				basetype: ARMOR
+				subtype: SHOULDERPADS
+				quantity: 1
+				value: 1
+				level: 1
+				effect: 2
+			}
+		}
+		weapon levels:
+		{
+			SWORD: 1
+			BOW: 1
+			DAGGER: 2
+			STAFF: 1
+			WAND: 1
+			HAMMER: 3
+		}
+	}
+}
+enemies: 
+{
+	{
+		enemy name: Forest Spider
+		enemy symbol: 'F'
+		enemy health: 13
+		enemy max health: 13
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 10
+		enemy y: 6
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Spider Leg
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+			{
+				item chance: 20
+				item name: Webwood Dagger
+				item basetype: WEAPON
+				item subtype: DAGGER
+				item quantity: 1
+				item level: 2
+				item effect: 2
+				item value: 3
+			}
+			{
+				item chance: 20
+				item name: Spider Cloth Helmet
+				item basetype: ARMOR
+				item subtype: HELMET
+				item quantity: 1
+				item level: 2
+				item effect: 2
+				item value: 1
+			}
+		}
+	}
+	{
+		enemy name: Forest Spider
+		enemy symbol: 'F'
+		enemy health: 12
+		enemy max health: 12
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 19
+		enemy y: 9
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Spider Leg
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+			{
+				item chance: 20
+				item name: Webwood Staff
+				item basetype: WEAPON
+				item subtype: STAFF
+				item quantity: 1
+				item level: 2
+				item effect: 2
+				item value: 3
+			}
+			{
+				item chance: 20
+				item name: Spider Cloth Boots
+				item basetype: ARMOR
+				item subtype: BOOTS
+				item quantity: 1
+				item level: 2
+				item effect: 1
+				item value: 1
+			}
+		}
+	}
+	{
+		enemy name: Forest Rat
+		enemy symbol: 'R'
+		enemy health: 6
+		enemy max health: 6
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 15
+		enemy y: 3
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Rat Tail
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+		}
+	}
+	{
+		enemy name: Forest Rat
+		enemy symbol: 'R'
+		enemy health: 6
+		enemy max health: 6
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 18
+		enemy y: 5
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Rat Tail
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+		}
+	}
+	{
+		enemy name: Forest Rat
+		enemy symbol: 'R'
+		enemy health: 5
+		enemy max health: 5
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 6
+		enemy y: 11
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Rat Tail
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+		}
+	}
+	{
+		enemy name: Forest Rat
+		enemy symbol: 'R'
+		enemy health: 6
+		enemy max health: 6
+		enemy damage: 1
+		enemy speed: 1
+		enemy level: 2
+		enemy x: 6
+		enemy y: 10
+		enemy agro distance: 5
+		enemy map: Deep Forest II
+		enemy drops:
+		{
+			{
+				item chance: 50
+				item name: Rat Tail
+				item basetype: JUNK
+				item subtype: NOSUBTYPE
+				item quantity: 1
+				item level: 2
+				item effect: -1
+				item value: 1
+			}
+		}
+	}
+}

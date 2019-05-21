@@ -1,0 +1,67 @@
+{
+	name: A Strange Awakening
+	event code: 1
+	recurring: false
+	equip: true
+	journal entry: true
+	story: 
+	{
+		You wake up in the middle of a strange forest.
+		You have no idea how you got there, but you look down
+		and notice blood on your shirt.
+
+		With nothing but a broken dagger and the shirt on
+		your back, you decide to get up and investigate your surroundings.
+	}
+	items:
+	{
+		{
+			item name: Broken Wooden Dagger
+			item type: WEAPON
+			item subtype: DAGGER
+			item quantity: 1
+			item value: 3
+			item level: 1
+			item effect: 3
+		}
+		{
+			item name: Bloodied White Shirt
+			item type: ARMOR
+			item subtype: CHESTPIECE
+			item quantity: 1
+			item value: 1
+			item level: 1
+			item effect: 3
+		}
+	}
+}
+{
+	name: A Deepening Forest
+	event code: 2
+	story:
+	{
+		Whew! Those spiders were tough.
+		Somehow, you were lucky enough to get past all three
+		with just the dagger.
+		As you look on, you see the forest shows no signs
+		of remission.
+		You hear screeching.
+		'What is that noise?' you wonder.
+		More screeching.
+		Suddenly, you recognize the noise.
+		Rats.
+	}
+}
+{
+	name: Kobold Clearing
+	event code: 3
+	story:
+	{
+		Those rats were persistent, yet you were able to defeat them.
+		And now, it appears as if your hard work may be about to pay off.
+		You stumble upon a clearing in the forest.
+		Although you are delighted that it seems you may be free from
+		the forest's grasp soon, your delight doesn't last long,
+		as you see a new enemy on the horizon: kobolds.
+	}
+}

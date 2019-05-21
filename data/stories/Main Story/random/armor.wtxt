@@ -1,0 +1,111 @@
+armor types:
+{
+	{
+	name: Cotton
+	level: 1
+	positive adjectives: Fine, Well-Spun, Reinforced
+	negative adjectives: Poorly-Spun, Rough, Blotchy
+	}
+	{
+	name: Hide
+	level: 5
+	positive adjectives: Fine, Trimmed, Reinforced
+	negative adjectives: Stinky, Rough, Blotchy
+	}
+	{
+	name: Leather
+	level: 9
+	positive adjectives: Well-Skinned, Fine, Exquisite
+	negative adjectives: Poorly-Skinned, Thin, Blotchy
+	}
+	{
+	name: Copper
+	level: 13
+	positive adjectives: Shiny, Alloyed, Refined
+	negative adjectives: Dull, Impure, Scratched
+	}
+	{
+	name: Iron
+	level: 16
+	positive adjectives: Shiny, Refined, Reinforced
+	negative adjectives: Dull, Rusty, Impure
+	}
+	{
+	name: Steel
+	level: 19
+	positive adjectives: Perfectly-Alloyed, Double-Refined, Superior Reinforced
+	negative adjectives: Poorly-Alloyed, Dull, Defective
+	}
+	{
+	name: Zirconium
+	level: 22
+	positive adjectives: Refined, Exquisite, Superior
+	negative adjectives: Poor, Terrible, Rusty
+	}
+	{
+	name: Palladium
+	level: 25
+	positive adjectives: Double-Refined, Exquisite, Triple-Refined
+	negative adjectives: Thin, Scratched, Rusty
+	}
+	{
+	name: Titanium
+	level: 28
+	positive adjectives: Pure, Thick, Exquisite
+	negative adjectives: Impure, Thin, Blotchy
+	}
+	{
+	name: Aeriron
+	level: 31
+	positive adjectives: Pure, Perfectly-Engineered, Double-Engineered
+	negative adjectives: Thin, Impure, Poorly-Engineered
+	}
+	{
+	name: Aersteel
+	level: 34
+	positive adjectives: Infused, Double-Infused, Compacted
+	negative adjectives: Poorly-Infused, Impure, Faulty
+	}
+	{
+	name: Arcanite
+	level: 37
+	positive adjectives: Aer-Infused, Aer-Compacted, Aeronated
+	negative adjectives: Poorly-Infused, Discombobulated, Defective
+	}
+	{
+	name: Black-Tech
+	level: 40
+	positive adjectives: Arcanite-Compounded, Reinforced, Network-Secure
+	negative adjectives: Network-Insecure, Dedigitized, Offline
+	}
+	{
+	name: Arc-Tech
+	level: 43
+	positive adjectives: Aeronated, Arcanited, Superior
+	negative adjectives: Inferior, Disconnected, Poorly-Structured
+	}
+	{
+	name: Zrandium
+	level: 45
+	positive adjectives: Innovative, Aer-Compacted, Recursively-Superior
+	negative adjectives: Vintage, Impure, Defective
+	}
+	{
+	name: Duplizrandium Wireless
+	level: 47
+	positive adjectives: 4G LTE, Triple-Layered, Chemically Superiorated
+	negative adjectives: Poorly-Infused, Discombobulated, Defective
+	}
+	{
+	name: Godmium
+	level: 49
+	positive adjectives: Aer-Infused, Diplizrandium-Compounded, Molecularly Superiorated
+	negative adjectives: Poorly-Infused, Offline, Faulty
+	}
+	{
+	name: Deutech
+	level: 50
+	positive adjectives: Technologically Superior, Aer-Compacted, Aeronated, Arcanite-Infused, Molecularly Superiorated, 4G LTE, Network-Secure
+	negative adjectives: Poorly-Infused, Discombobulated, Defective, Faulty, Offline, Impure, Vintage, Network-Insecure
+	}
+}

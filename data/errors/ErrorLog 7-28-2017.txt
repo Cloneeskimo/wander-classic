@@ -1,0 +1,5 @@
+[07/28/2017 15:39:16][MAP_H]: Unable to open Main Story//generic.wmap (Code: 0)
+[07/28/2017 15:39:21][MAP_H]: Unable to open Main Story//generic.wmap (Code: 0)
+[07/28/2017 15:59:09][SAVEMANAGER_H]: Could not delete c.wsave, assuming non-existence (Code: 0)
+[07/28/2017 16:34:40][MAP_H]: Too many player starting spots defined for map deepforest.wmap. Extras ignored (Code: 0)
+[07/28/2017 16:35:09][MAP_H]: Too many player starting spots defined for map deepforest.wmap. Extras ignored (Code: 0)

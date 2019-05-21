@@ -1,0 +1,248 @@
+weapon skills:
+{
+	{
+		weapon: SWORD
+		name: Swing Sword
+		description: Swing your sword at your target, slashing them for 100% damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: SWORD
+		name: Holy Charge
+		description: Charge at your target with full force, stunning them for 2 turns and healing you for 50% health. 7 turn cooldown.
+		effect code: stun 2 heal 0.5x
+		level: 7
+		cooldown: 7
+	}
+	{
+		weapon: SWORD
+		name: Transfer of the Gods
+		description: Use holy magic to deal 100% damage to your enemy, and heal you and your allies for 50% health. 7 turn cooldown.
+		effect code: damage 1x group 0.65x
+		level: 15
+		cooldown: 7
+	}
+	{
+		weapon: SWORD
+		name: Heavenly Strike
+		description: Put all your strength into a massive swipe of your sword, dealing 275% damage to your target. 15 turn cooldown.
+		effect code: damage 2.75x
+		level: 22
+		cooldown: 15
+	}
+	{
+		weapon: SWORD
+		name: Graceful Savior
+		description: Call upon the gods to heal you and your entire group for 80% health. 20 turn cooldown.
+		effect code: group 0.80x
+		level: 27
+		cooldown: 20
+	}
+	
+	{
+		weapon: DAGGER
+		name: Stab
+		description: Stab your target with your dagger, piercing them for 100% damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: DAGGER
+		name: Slit Throat
+		description: Slib the throat of your target, dealing 100% damage plus 33% damage each turn for five turns. 8 turn cooldown.
+		effect code: dot 0.33x damage 1x
+		level: 7
+		cooldown: 8
+	}
+	{
+		weapon: DAGGER
+		name: Backstab
+		description: Fade into the shadows, reappearing behind your target to stab them in the back, stunning them for 2 turns. 8 turn cooldown.
+		effect code: stun 2
+		level: 15
+		cooldown: 8
+	}
+	{
+		weapon: DAGGER
+		name: Puncture Veins
+		description: Puncture the veins of your target, dealing 150% damage plus 40% damage each turn for five turns. 14 turn cooldown.
+		effect code: dot 0.4x damage 1.5x
+		level: 22
+		cooldown: 14
+	}
+	{
+		weapon: DAGGER
+		name: Knife Array
+		description: Throw an array of knives at all enemies dealing each one 125% damage. 16 turn cooldown.
+		effect code: aoe 1.25x
+		level: 27
+		cooldown: 16
+	}
+	
+	{
+		weapon: BOW
+		name: Shoot Bow
+		description: Shoot your bow at your target, piercing them for 100% damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: BOW
+		name: Sharpened Arrow
+		description: Shoot your target with a sharpened arrow, exploding them for 200% damage. 9 turn cooldown.
+		effect code: damage 2x
+		level: 7
+		cooldown: 9
+	}
+	{
+		weapon: BOW
+		name: Flaming Arrow
+		description: Shoot your target with a flaming arrow, burning them for 150% damage and dealing 33% damage each turn for 5 turns. 10 turn cooldown.
+		effect code: damage 1.50x dot 0.33x
+		level: 15
+		cooldown: 10
+	}
+	{
+		weapon: BOW
+		name: Explosive Arrow
+		description: Shoot an explosive arrow at your target, exploding them for 200% damage and all other enemies for 125% damage. 17 turn cooldown.
+		effect code: damage 0.75x aoe 1.25x
+		level: 22
+		cooldown: 16
+	}
+	{
+		weapon: BOW
+		name: Shot of the Hunter
+		description: Focus all your energy into a single precise and highly effective shot, dealing 350% damage to your target. 18 turn cooldown.
+		effect code: damage 3.5x
+		level: 27
+		cooldown: 19
+	}
+	
+	{
+		weapon: STAFF
+		name: Swing Staff
+		description: Swing your staff at your target, pounding them for 100% damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: STAFF
+		name: Elemental Aid
+		description: Gather the forces of nature to heal yourself for 75% of your health. 5 turn cooldown.
+		effect code: heal 0.75x
+		level: 7
+		cooldown: 5
+	}
+	{
+		weapon: STAFF
+		name: Blunt Swing
+		description: Pound your enemy in the side of the head with your staff, dealing 75% damage and stunning them for 2 turns. 9 turn cooldown.
+		effect code: damage 0.75x stun 2
+		level: 15
+		cooldown: 9
+	}
+	{
+		weapon: STAFF
+		name: Mother Nature's Light
+		description: Call Mother Nature to your aid, healing you for and your allies for 50% of your healths. 14 turn cooldown.
+		effect code: group 0.5x
+		level: 22
+		cooldown: 14
+	}
+	{
+		weapon: STAFF
+		name: Forces of Nature
+		description: Call forth all the elements to barrage your enemies with an explosion of power, dealing each enemy 200% damage. 20 turn cooldown.
+		effect code: aoe 2x
+		level: 27
+		cooldown: 17
+	}
+	
+	{
+		weapon: WAND
+		name: Shoot Wand
+		description: Shoot your wand at your target, exploding them for 100% damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: WAND
+		name: Lightning Bolt
+		description: Shoot your target with a bolt of pure electrical energy from the clouds, striking them for 175% damage. 7 turn cooldown.
+		effect code: damage 1.75x
+		level: 7
+		cooldown: 7
+	}
+	{
+		weapon: WAND
+		name: Fire Bolt
+		description: Summon fire from the elemental plane, shooting it at your enemy and dealing 100% damage plus 33% damage each turn for 5 turns. 11 turn cooldown.
+		effect code: damage 1x dot 0.33x
+		level: 15
+		cooldown: 11
+	}
+	{
+		weapon: WAND
+		name: Blizzard
+		description: Create a blizzard at your spot, dealing 125% damage to each enemy. 14 turn cooldown.
+		effect code: aoe 1.25x
+		level: 22
+		cooldown: 14
+	}
+	{
+		weapon: WAND
+		name: Essence Bolt
+		description: Shoot your target with pure magical essence, exploding them for 300% damage. 20 turn cooldown.
+		effect code: damage 3x
+		level: 27
+		cooldown: 20
+	}
+	
+	{
+		weapon: HAMMER
+		name: Smash
+		description: Smash your target with your hammer, crushing him for 100% your weapon's damage. no cooldown.
+		effect code: damage 1x
+		level: 1
+		cooldown: 0
+	}
+	{
+		weapon: HAMMER
+		name: Head Bash
+		description: Bash your target's head with your own dealing him 125% damage, and 33% damage each turn for 5 turns. 9 turn cooldown.
+		effect code: damage 1.25x dot 0.33x
+		level: 7
+		cooldown: 9
+	}
+	{
+		weapon: HAMMER
+		name: Knock Unconscious
+		description: Hit your target with such force that they become unconscious for 3 turns. 10 turn cooldown.
+		effect code: stun 3
+		level: 15
+		cooldown: 10
+	}
+	{
+		weapon: HAMMER
+		name: Whirlwind
+		description: Spin in circles with your hammer in hand, crushing all enemies for 125% damage. 14 turn cooldown.
+		effect code: aoe 1.25x
+		level: 22
+		cooldown: 14
+	}
+	{
+		weapon: HAMMER
+		name: Crush Limb
+		description: Crush the limbs of your target, dealing 150% damage and 40% damage each turn for 5 turns. 15 turn cooldown.
+		effect code: damage 1.5x dot 0.4x
+		level: 27
+		cooldown: 15
+	}	
+}
